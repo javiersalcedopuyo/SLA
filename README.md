@@ -1,4 +1,5 @@
 # Swift Linear Algebra
+![Unit Testing](https://github.com/javiersalcedopuyo/SLA/workflows/Unit%20Tests/badge.svg)
 
 [WIP]  
 A Swift library for computer graphics mathematics.
