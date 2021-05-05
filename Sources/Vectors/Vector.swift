@@ -1,17 +1,14 @@
-protocol Vector : Equatable
+public protocol Vector : Equatable
 {
     // IDEA: Numeric instead of SignedNumeric?
-    associatedtype Item: SignedNumeric, Comparable
+    associatedtype ItemType: SignedNumeric, Comparable
 
-    var contents: [Item] {get set}
+    var contents: [ItemType] {get set}
 
     static func zero()      -> Self
     static func identity()  -> Self
 
     static func lerp(from: Self, to: Self, t: Double)  -> Self
-
-    func projectOnto(_ b: Self) -> Self
-    func reject(_ b: Self)      -> Self
 }
 
 // Common methods and operators
@@ -22,7 +19,7 @@ extension Vector
         return self.contents.count
     }
 
-    public mutating func clamp(min minVal: Item, max maxVal: Item)
+    public mutating func clamp(min minVal: ItemType, max maxVal: ItemType)
     {
         for i in 0..<self.length()
         {
@@ -30,16 +27,16 @@ extension Vector
         }
     }
 
-    public subscript(index: Int) -> Item
+    public subscript(index: Int) -> ItemType
     {
         get
         {
-            assert(index >= 0 && index < self.length(), "ERROR: Access out of bounds!")
+            assert(index >= 0 && index < self.length(), "ERROR: \(index) is out of bounds!")
             return self.contents[index]
         }
         set(newVal)
         {
-            assert(index >= 0 && index < self.length(), "ERROR: Access out of bounds!")
+            assert(index >= 0 && index < self.length(), "ERROR: \(index) is out of bounds!")
             self.contents[index] = newVal
         }
     }
@@ -78,7 +75,7 @@ extension Vector
         return result
     }
 
-    public static func +(left: Self, right: Item) -> Self
+    public static func +(left: Self, right: ItemType) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -96,7 +93,7 @@ extension Vector
         }
     }
 
-    public static func +=(left: inout Self, right: Item)
+    public static func +=(left: inout Self, right: ItemType)
     {
         for i in 0..<left.length()
         {
@@ -115,7 +112,7 @@ extension Vector
         return result
     }
 
-    public static func -(left: Self, right: Item) -> Self
+    public static func -(left: Self, right: ItemType) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -133,7 +130,7 @@ extension Vector
         }
     }
 
-    public static func -=(left: inout Self, right: Item)
+    public static func -=(left: inout Self, right: ItemType)
     {
         for i in 0..<left.length()
         {
@@ -152,7 +149,7 @@ extension Vector
         return result
     }
 
-    public static func *(left: Self, right: Item) -> Self
+    public static func *(left: Self, right: ItemType) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -170,7 +167,7 @@ extension Vector
         }
     }
 
-    public static func *=(left: inout Self, right: Item)
+    public static func *=(left: inout Self, right: ItemType)
     {
         for i in 0..<left.length()
         {
@@ -179,13 +176,13 @@ extension Vector
     }
 }
 
-extension Vector where Item: FloatingPoint
+extension Vector where ItemType: FloatingPoint
 {
-    func dot (_ right: Self) -> Item
+    func dot (_ right: Self) -> ItemType
     {
         assert(self.length() == right.length(), "ERROR: Vector length mismatch")
 
-        var result: Item = 0
+        var result: ItemType = 0
         for i in 0..<self.length()
         {
             result += self[i] * right[i]
@@ -195,8 +192,8 @@ extension Vector where Item: FloatingPoint
 
     //TODO: func wedgeProduct(_ right: Self) -> Self
 
-    func norm2() -> Item { return self.dot(self) }
-    func norm()  -> Item { return self.dot(self).squareRoot() }
+    func norm2() -> ItemType { return self.dot(self) }
+    func norm()  -> ItemType { return self.dot(self).squareRoot() }
 
     func normalized() -> Self
     {
@@ -219,7 +216,7 @@ extension Vector where Item: FloatingPoint
         return result
     }
 
-    static func /(left: Self, right: Item) -> Self
+    static func /(left: Self, right: ItemType) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -237,7 +234,7 @@ extension Vector where Item: FloatingPoint
         }
     }
 
-    static func /=(left: inout Self, right: Item)
+    static func /=(left: inout Self, right: ItemType)
     {
         for i in 0..<left.length()
         {
@@ -246,7 +243,7 @@ extension Vector where Item: FloatingPoint
     }
 }
 
-extension Vector where Item: SignedInteger
+extension Vector where ItemType: SignedInteger
 {
     // DIVISION
     static func /(left: Self, right: Self) -> Self
@@ -259,7 +256,7 @@ extension Vector where Item: SignedInteger
         return result
     }
 
-    static func /(left: Self, right: Item) -> Self
+    static func /(left: Self, right: ItemType) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -277,7 +274,7 @@ extension Vector where Item: SignedInteger
         }
     }
 
-    static func /=(left: inout Self, right: Item)
+    static func /=(left: inout Self, right: ItemType)
     {
         for i in 0..<left.length()
         {

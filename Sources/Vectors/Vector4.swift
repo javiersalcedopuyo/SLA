@@ -18,7 +18,7 @@ public struct Vector4 : Vector
     public func b() -> Double { return self.contents[2] }
     public func a() -> Double { return self.contents[3] }
 
-    static func lerp(from: Self, to: Self, t: Double)  -> Self
+    public static func lerp(from: Self, to: Self, t: Double)  -> Self
     {
         if      t <= 0.0 { return from }
         else if t >= 1.0 { return to }

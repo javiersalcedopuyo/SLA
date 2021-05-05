@@ -24,7 +24,7 @@ public struct Vector3 : Vector
                        z: self.x() * right.y() - self.y() * right.x())
     }
 
-    static func lerp(from: Self, to: Self, t: Double)  -> Self
+    public static func lerp(from: Self, to: Self, t: Double)  -> Self
     {
         if      t <= 0.0 { return from }
         else if t >= 1.0 { return to }

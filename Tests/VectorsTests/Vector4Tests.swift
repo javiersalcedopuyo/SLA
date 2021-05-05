@@ -1,5 +1,5 @@
 import XCTest
-@testable import SLA
+@testable import Vectors
 
 final class Vector4Tests: XCTestCase
 {
