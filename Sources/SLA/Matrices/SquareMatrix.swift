@@ -1,5 +1,3 @@
-import Vectors
-
 // NOTE: Column-major
 public protocol SquareMatrix : Equatable
 {
@@ -19,14 +17,14 @@ public protocol SquareMatrix : Equatable
     // TODO: Transforms
 }
 
-extension SquareMatrix
+public extension SquareMatrix
 {
-    public func getDimensions() -> Int
+    func getDimensions() -> Int
     {
         return self.contents.count
     }
 
-    public func get(col: Int, row: Int) -> Double
+    func get(col: Int, row: Int) -> Double
     {
         assert(col < self.contents.count,    "ERROR: Column \(col) is out of bounds")
         assert(row < self.contents[0].count, "ERROR: Row \(row) is out of bounds")
@@ -42,7 +40,7 @@ extension SquareMatrix
         self.contents[col][row] = val
     }
 
-    public func asSingleArray() -> [Double]
+    func asSingleArray() -> [Double]
     {
         var result = [Double]()
         for column in self.contents {
@@ -54,7 +52,7 @@ extension SquareMatrix
         return result
     }
 
-    public static func +(left: Self, right: Self) -> Self
+    static func +(left: Self, right: Self) -> Self
     {
         let n = left.getDimensions()
         var result = left
@@ -69,7 +67,7 @@ extension SquareMatrix
         return result
     }
 
-    public static func -(left: Self, right: Self) -> Self
+    static func -(left: Self, right: Self) -> Self
     {
         let n = left.getDimensions()
         var result = left
@@ -84,7 +82,7 @@ extension SquareMatrix
         return result
     }
 
-    public static func *(right: Self, left: Self) -> Self
+    static func *(right: Self, left: Self) -> Self
     {
         let n = right.getDimensions()
 
@@ -103,7 +101,7 @@ extension SquareMatrix
         return result
     }
 
-    public static func *(left: Self, right: ColumnType) -> ColumnType
+    static func *(left: Self, right: ColumnType) -> ColumnType
     {
         let n = left.getDimensions()
 
@@ -117,7 +115,7 @@ extension SquareMatrix
         return result
     }
 
-    public static func ==(left: Self, right: Self) -> Bool
+    static func ==(left: Self, right: Self) -> Bool
     {
         let n = left.getDimensions()
 

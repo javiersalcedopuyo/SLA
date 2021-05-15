@@ -1,6 +1,5 @@
 import XCTest
-import Vectors
-@testable import Matrices
+@testable import SLA
 
 final class Matrix4x4Tests: XCTestCase
 {

@@ -1,5 +1,3 @@
-import Vectors
-
 public struct Matrix4x4 : SquareMatrix
 {
     public var contents: [[Double]]

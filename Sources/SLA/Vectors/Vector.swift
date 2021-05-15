@@ -12,14 +12,14 @@ public protocol Vector : Equatable
 }
 
 // Common methods and operators
-extension Vector
+public extension Vector
 {
-    public func length() -> Int
+    func length() -> Int
     {
         return self.contents.count
     }
 
-    public mutating func clamp(min minVal: ItemType, max maxVal: ItemType)
+    mutating func clamp(min minVal: ItemType, max maxVal: ItemType)
     {
         for i in 0..<self.length()
         {
@@ -27,7 +27,7 @@ extension Vector
         }
     }
 
-    public subscript(index: Int) -> ItemType
+    subscript(index: Int) -> ItemType
     {
         get
         {
@@ -41,7 +41,7 @@ extension Vector
         }
     }
 
-    public static prefix func -(right: Self) -> Self
+    static prefix func -(right: Self) -> Self
     {
         var result = right
         for i in 0..<right.length()
@@ -51,7 +51,7 @@ extension Vector
         return result
     }
 
-    public static func ==(left: Self, right: Self) -> Bool
+    static func ==(left: Self, right: Self) -> Bool
     {
         if left.length() != right.length() { return false }
 
@@ -65,7 +65,7 @@ extension Vector
     }
 
     // ADDITION
-    public static func +(left: Self, right: Self) -> Self
+    static func +(left: Self, right: Self) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -75,7 +75,7 @@ extension Vector
         return result
     }
 
-    public static func +(left: Self, right: ItemType) -> Self
+    static func +(left: Self, right: ItemType) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -85,7 +85,7 @@ extension Vector
         return result
     }
 
-    public static func +=(left: inout Self, right: Self)
+    static func +=(left: inout Self, right: Self)
     {
         for i in 0..<left.length()
         {
@@ -93,7 +93,7 @@ extension Vector
         }
     }
 
-    public static func +=(left: inout Self, right: ItemType)
+    static func +=(left: inout Self, right: ItemType)
     {
         for i in 0..<left.length()
         {
@@ -102,7 +102,7 @@ extension Vector
     }
 
     // SUBTRACTION
-    public static func -(left: Self, right: Self) -> Self
+    static func -(left: Self, right: Self) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -112,7 +112,7 @@ extension Vector
         return result
     }
 
-    public static func -(left: Self, right: ItemType) -> Self
+    static func -(left: Self, right: ItemType) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -122,7 +122,7 @@ extension Vector
         return result
     }
 
-    public static func -=(left: inout Self, right: Self)
+    static func -=(left: inout Self, right: Self)
     {
         for i in 0..<left.length()
         {
@@ -130,7 +130,7 @@ extension Vector
         }
     }
 
-    public static func -=(left: inout Self, right: ItemType)
+    static func -=(left: inout Self, right: ItemType)
     {
         for i in 0..<left.length()
         {
@@ -139,7 +139,7 @@ extension Vector
     }
 
     // MULTIPLICATION
-    public static func *(left: Self, right: Self) -> Self
+    static func *(left: Self, right: Self) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -149,7 +149,7 @@ extension Vector
         return result
     }
 
-    public static func *(left: Self, right: ItemType) -> Self
+    static func *(left: Self, right: ItemType) -> Self
     {
         var result = left
         for i in 0..<left.length()
@@ -159,7 +159,7 @@ extension Vector
         return result
     }
 
-    public static func *=(left: inout Self, right: Self)
+    static func *=(left: inout Self, right: Self)
     {
         for i in 0..<left.length()
         {
@@ -167,7 +167,7 @@ extension Vector
         }
     }
 
-    public static func *=(left: inout Self, right: ItemType)
+    static func *=(left: inout Self, right: ItemType)
     {
         for i in 0..<left.length()
         {

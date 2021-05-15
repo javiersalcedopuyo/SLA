@@ -4,14 +4,17 @@
 import PackageDescription
 
 let package = Package(
+
     name: "SLA",
+
     products: [
         .library(
             name: "SLA",
             targets: ["SLA"]),
     ],
-    dependencies: [
-    ],
+
+    dependencies: [],
+
     targets: [
         .target(
             name: "SLA",
@@ -19,19 +22,5 @@ let package = Package(
         .testTarget(
             name: "SLATests",
             dependencies: ["SLA"]),
-
-        .target(
-            name: "Vectors",
-            dependencies: []),
-        .testTarget(
-            name: "VectorsTests",
-            dependencies: ["Vectors"]),
-
-        .target(
-            name: "Matrices",
-            dependencies: ["Vectors"]),
-        .testTarget(
-            name: "MatricesTests",
-            dependencies: ["Matrices"]),
     ]
 )
