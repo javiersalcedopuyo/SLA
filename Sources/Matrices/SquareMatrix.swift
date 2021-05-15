@@ -1,7 +1,7 @@
 import Vectors
 
 // NOTE: Column-major
-protocol SquareMatrix : Equatable
+public protocol SquareMatrix : Equatable
 {
     associatedtype ColumnType: Vector where ColumnType.ItemType == Double
 

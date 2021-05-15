@@ -1,6 +1,6 @@
 import Vectors
 
-struct Matrix4x4 : SquareMatrix
+public struct Matrix4x4 : SquareMatrix
 {
     public var contents: [[Double]]
     // (0,0) (1,0) (2,0) (3,0)
