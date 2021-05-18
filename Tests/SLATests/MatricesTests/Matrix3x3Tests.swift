@@ -13,7 +13,7 @@ final class Matrix3x3Tests: XCTestCase
 
     func testGetAsSingleArray()
     {
-        let line = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
+        let line :[Float] = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
 
         let a = Vector3(x:0, y:1, z:2)
         let b = Vector3(x:3, y:4, z:5)

@@ -1,20 +1,21 @@
 public struct Vector3 : Vector
 {
-    public var contents: [Double]
+    public static let size = 3 * MemoryLayout<Float>.size
+    public var contents: [Float]
 
     // INITIALISERS
-    public init(x: Double, y: Double, z: Double) { contents = [x, y, z] }
-    public init(r: Double, g: Double, b: Double) { contents = [r, g, b] }
+    public init(x: Float, y: Float, z: Float) { contents = [x, y, z] }
+    public init(r: Float, g: Float, b: Float) { contents = [r, g, b] }
     public static func zero()     -> Self        { return Vector3(x:0, y:0, z:0) }
     public static func identity() -> Self        { return Vector3(x:1, y:1, z:1) }
 
     // ACCESSORS
-    public func x() -> Double { return self.contents[0] }
-    public func y() -> Double { return self.contents[1] }
-    public func z() -> Double { return self.contents[2] }
-    public func r() -> Double { return self.contents[0] }
-    public func g() -> Double { return self.contents[1] }
-    public func b() -> Double { return self.contents[2] }
+    public func x() -> Float { return self.contents[0] }
+    public func y() -> Float { return self.contents[1] }
+    public func z() -> Float { return self.contents[2] }
+    public func r() -> Float { return self.contents[0] }
+    public func g() -> Float { return self.contents[1] }
+    public func b() -> Float { return self.contents[2] }
 
     // VECTOR ARITHMETIC
     public func cross(_ right: Self) -> Self
@@ -24,7 +25,7 @@ public struct Vector3 : Vector
                        z: self.x() * right.y() - self.y() * right.x())
     }
 
-    public static func lerp(from: Self, to: Self, t: Double)  -> Self
+    public static func lerp(from: Self, to: Self, t: Float)  -> Self
     {
         if      t <= 0.0 { return from }
         else if t >= 1.0 { return to }

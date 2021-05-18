@@ -58,7 +58,7 @@ final class Vector4Tests: XCTestCase
 
         let normsProduct = a.norm() * b.norm()
 
-        XCTAssertEqual( a.dot(b), normsProduct )
+        XCTAssertEqual( a.dot(b), normsProduct, accuracy: 0.0001 )
     }
 
     func testNormalized()

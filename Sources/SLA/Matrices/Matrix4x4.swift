@@ -1,6 +1,8 @@
 public struct Matrix4x4 : SquareMatrix
 {
-    public var contents: [[Double]]
+    public let size = 4 * 4 * MemoryLayout<Float>.size
+
+    public var contents: [[Float]]
     // (0,0) (1,0) (2,0) (3,0)
     // (0,1) (1,1) (2,1) (3,1)
     // (0,2) (1,2) (2,2) (3,2)

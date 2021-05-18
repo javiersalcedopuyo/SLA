@@ -4,11 +4,12 @@ public protocol Vector : Equatable
     associatedtype ItemType: SignedNumeric, Comparable
 
     var contents: [ItemType] {get set}
+    static var size: Int {get}
 
     static func zero()      -> Self
     static func identity()  -> Self
 
-    static func lerp(from: Self, to: Self, t: Double)  -> Self
+    static func lerp(from: Self, to: Self, t: Float)  -> Self
 }
 
 // Common methods and operators

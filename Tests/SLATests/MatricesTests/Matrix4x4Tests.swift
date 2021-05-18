@@ -14,10 +14,10 @@ final class Matrix4x4Tests: XCTestCase
 
     func testGetAsSingleArray()
     {
-        let line = [0.0,  1.0,  2.0,  3.0,
-                    4.0,  5.0,  6.0,  7.0,
-                    8.0,  9.0,  10.0, 11.0,
-                    12.0, 13.0, 14.0, 15.0]
+        let line :[Float] = [0.0,  1.0,  2.0,  3.0,
+                             4.0,  5.0,  6.0,  7.0,
+                             8.0,  9.0,  10.0, 11.0,
+                             12.0, 13.0, 14.0, 15.0]
 
         let a = Vector4(x:0,  y:1,  z:2,  w: 3)
         let b = Vector4(x:4,  y:5,  z:6,  w: 7)
