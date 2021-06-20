@@ -44,4 +44,40 @@ final class Matrix3x3Tests: XCTestCase
 
         XCTAssertEqual(I*V, V)
     }
+
+    func testRotationMatrixInX()
+    {
+        let a: Float = 0.123
+        let R = Matrix3x3.makeRotation(radians: a, axis: Vector3(x:1, y:0, z:0))
+
+        let reference = Matrix3x3(a: Vector3(x:1, y:0, z:0),
+                                  b: Vector3(x:0, y: cos(a), z: sin(a)),
+                                  c: Vector3(x:0, y: -sin(a), z: cos(a)))
+
+        XCTAssertEqual(R, reference)
+    }
+
+    func testRotationMatrixInY()
+    {
+        let a: Float = 0.123
+        let R = Matrix3x3.makeRotation(radians: a, axis: Vector3(x:0, y:1, z:0))
+
+        let reference = Matrix3x3(a: Vector3(x: cos(a), y:0, z: -sin(a)),
+                                  b: Vector3(x: 0, y: 1, z: 0),
+                                  c: Vector3(x: sin(a), y: 0, z: cos(a)))
+
+        XCTAssertEqual(R, reference)
+    }
+
+    func testRotationMatrixInZ()
+    {
+        let a: Float = 0.123
+        let R = Matrix3x3.makeRotation(radians: a, axis: Vector3(x:0, y:0, z:1))
+
+        let reference = Matrix3x3(a: Vector3(x: cos(a), y: sin(a), z: 0),
+                                  b: Vector3(x: -sin(a), y: cos(a), z: 0),
+                                  c: Vector3(x: 0, y: 0, z: 1))
+
+        XCTAssertEqual(R, reference)
+    }
 }

@@ -50,4 +50,9 @@ final class Matrix4x4Tests: XCTestCase
 
         XCTAssertEqual(I*V, V)
     }
+
+    // NOTE: The following tests are exactly the same as for Matrix3x3, so won't be implemented
+    // func testRotationMatrixInX()
+    // func testRotationMatrixInY()
+    // func testRotationMatrixInZ()
 }

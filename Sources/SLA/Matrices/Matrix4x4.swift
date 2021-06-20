@@ -1,3 +1,5 @@
+import Foundation
+
 public struct Matrix4x4 : SquareMatrix
 {
     public let size = 4 * 4 * MemoryLayout<Float>.size
@@ -29,6 +31,37 @@ public struct Matrix4x4 : SquareMatrix
         let d = Vector4(x:0, y:0, z:0, w:1)
 
         return Matrix4x4(a:a, b:b, c:c, d:d)
+    }
+
+    public static func makeRotation(radians: Float, axis: Vector4) -> Self
+    {
+        let c = cos(radians)
+        let s = sin(radians)
+        let d = 1.0 - c
+
+        let x  = axis.x() * d
+        let y  = axis.y() * d
+        let z  = axis.z() * d
+        let xy = x * axis.y()
+        let xz = x * axis.z()
+        let yz = y * axis.z()
+
+        return Matrix4x4 (a: Vector4(x: c  + x * axis.x(),
+                                     y: xy + s * axis.z(),
+                                     z: xz - s * axis.y(),
+                                     w: 0.0),
+                          b: Vector4(x: xy - s * axis.z(),
+                                     y: c  + y * axis.y(),
+                                     z: yz + s * axis.x(),
+                                     w: 0.0),
+                          c: Vector4(x: xz + s * axis.y(),
+                                     y: yz - s * axis.x(),
+                                     z: c  + z * axis.z(),
+                                     w: 0.0),
+                          d: Vector4(x: 0.0,
+                                     y: 0.0,
+                                     z: 0.0,
+                                     w: 1.0))
     }
 
     public func getColumn(_ col: Int) -> Vector4

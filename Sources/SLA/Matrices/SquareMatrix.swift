@@ -3,14 +3,18 @@ public protocol SquareMatrix : Equatable
 {
     associatedtype ColumnType: Vector where ColumnType.ItemType == Float
 
-    var contents: [[Float]] {get set}
+    var contents: [[Float]] {get set} // TODO: Single array
     var size: Int { get }
 
     static func zero()     -> Self
     static func identity() -> Self
 
+    static func makeRotation(radians: Float, axis: ColumnType) -> Self
+
     func getColumn(_ col: Int) -> ColumnType
 
+    // TODO: static func lookAtLH() -> Self
+    // TODO: static func lookAtRH() -> Self
     // TODO: static func /(left: Self, right: Self) -> Self?
     // TODO: func inv() -> Self
     // TODO: func det() -> Float
@@ -53,6 +57,7 @@ public extension SquareMatrix
         return result
     }
 
+    // OPERATORS
     static func +(left: Self, right: Self) -> Self
     {
         let n = left.getDimensions()

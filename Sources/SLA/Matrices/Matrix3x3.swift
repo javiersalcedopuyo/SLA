@@ -1,3 +1,4 @@
+import Foundation
 public struct Matrix3x3 : SquareMatrix
 {
     public let size = 3 * 3 * MemoryLayout<Float>.size
@@ -36,6 +37,30 @@ public struct Matrix3x3 : SquareMatrix
         return Vector3(x: self.contents[col][0],
                        y: self.contents[col][1],
                        z: self.contents[col][2])
+    }
+
+    public static func makeRotation(radians: Float, axis: Vector3) -> Self
+    {
+        let c = cos(radians)
+        let s = sin(radians)
+        let d = 1.0 - c
+
+        let x  = axis.x() * d
+        let y  = axis.y() * d
+        let z  = axis.z() * d
+        let xy = x * axis.y()
+        let xz = x * axis.z()
+        let yz = y * axis.z()
+
+        return Matrix3x3 (a: Vector3(x: c  + x * axis.x(),
+                                     y: xy + s * axis.z(),
+                                     z: xz - s * axis.y()),
+                          b: Vector3(x: xy - s * axis.z(),
+                                     y: c  + y * axis.y(),
+                                     z: yz + s * axis.x()),
+                          c: Vector3(x: xz + s * axis.y(),
+                                     y: yz - s * axis.x(),
+                                     z: c  + z * axis.z()))
     }
 
     // TODO: static func *(right: Self, left: Matrix3x4) -> Matrix3x4
