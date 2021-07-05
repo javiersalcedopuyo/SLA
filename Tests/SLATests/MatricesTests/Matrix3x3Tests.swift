@@ -80,4 +80,42 @@ final class Matrix3x3Tests: XCTestCase
 
         XCTAssertEqual(R, reference)
     }
+
+    func testSetColumn()
+    {
+        let colIdx = 2
+        let newCol = Vector3.identity()
+
+        var A = Matrix3x3.zero()
+        A.setColumn(idx: colIdx, val: newCol)
+
+        XCTAssertEqual(A.getColumn(colIdx), newCol)
+    }
+
+    func testTransposition()
+    {
+        let M = Matrix3x3(a: Vector3(x:0, y:1, z:2),
+                          b: Vector3(x:3, y:4, z:5),
+                          c: Vector3(x:6, y:7, z:8))
+
+        let Mt = M.transposed()
+
+        let cols = M.getDimensions()
+        let rows = cols // Square Matrix
+
+        for x in 0..<cols {
+            for y in 0..<rows
+            {
+                XCTAssertEqual(M.get(col: x, row: y), Mt.get(col:y, row:x))
+            }
+        }
+    }
+
+    func testTranspositionOfIdentity()
+    {
+        let I = Matrix3x3.identity()
+        let It = I.transposed()
+
+        XCTAssertEqual(I, It)
+    }
 }

@@ -6,6 +6,7 @@ public struct Vector4 : Vector
     // INITIALISERS
     public init(x: Float, y: Float, z: Float, w: Float) { contents = [x, y, z, w] }
     public init(r: Float, g: Float, b: Float, a: Float) { contents = [r, g, b, a] }
+    public init(xyz: Vector3, w: Float) { contents = [xyz.x(), xyz.y(), xyz.z(), w] }
     public static func zero()     -> Self                   { return Vector4(x:0, y:0, z:0, w: 0) }
     public static func identity() -> Self                   { return Vector4(x:1, y:1, z:1, w: 1) }
 
@@ -18,6 +19,9 @@ public struct Vector4 : Vector
     public func g() -> Float { return self.contents[1] }
     public func b() -> Float { return self.contents[2] }
     public func a() -> Float { return self.contents[3] }
+
+    public func xyz() -> Vector3 { return Vector3(x: self.x(), y: self.y(), z: self.z()) }
+    // TODO: More combinations
 
     public static func lerp(from: Self, to: Self, t: Float)  -> Self
     {

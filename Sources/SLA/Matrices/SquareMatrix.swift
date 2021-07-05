@@ -13,8 +13,8 @@ public protocol SquareMatrix : Equatable
 
     func getColumn(_ col: Int) -> ColumnType
 
-    // TODO: static func lookAtLH() -> Self
-    // TODO: static func lookAtRH() -> Self
+    // TODO: static func perspective() -> Self
+
     // TODO: static func /(left: Self, right: Self) -> Self?
     // TODO: func inv() -> Self
     // TODO: func det() -> Float
@@ -43,6 +43,14 @@ public extension SquareMatrix
         assert(row < self.contents[0].count, "ERROR: Row \(row) is out of bounds")
 
         self.contents[col][row] = val
+    }
+
+    mutating func setColumn(idx: Int, val: ColumnType)
+    {
+        for i in 0..<self.getDimensions()
+        {
+            self.contents[idx][i] = val[i]
+        }
     }
 
     func asSingleArray() -> [Float]
@@ -136,5 +144,21 @@ public extension SquareMatrix
             }
         }
         return result
+    }
+
+    func transposed() -> Self
+    {
+        var transposed   = Self.zero()
+        let cols = self.getDimensions()
+        let rows = cols // Square Matrix
+
+        for x in 0..<cols {
+            for y in 0..<rows
+            {
+                transposed.set(col: y, row: x, val: self.get(col: x, row: y))
+            }
+        }
+
+        return transposed
     }
 }

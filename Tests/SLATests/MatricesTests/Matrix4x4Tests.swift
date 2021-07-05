@@ -1,8 +1,45 @@
 import XCTest
 @testable import SLA
 
+// As seen on https://docs.microsoft.com/en-gb/windows/win32/direct3d9/d3dxmatrixlookatlh
+func DXLookAtRH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Matrix4x4
+{
+    let zAxis = (target - eye).normalized()
+    let xAxis = zAxis.cross(upAxis).normalized()
+    let yAxis = xAxis.cross(zAxis)
+
+    let colA = Vector4(xyz: xAxis, w: xAxis.dot(-eye))
+    let colB = Vector4(xyz: yAxis, w: yAxis.dot(-eye))
+    let colC = Vector4(xyz: zAxis, w: zAxis.dot(-eye))
+    let colD = Vector4(x:0, y:0, z:0, w:1)
+
+    return Matrix4x4(a: colA, b: colB, c: colC, d: colD)
+}
+
+// As seen on https://docs.microsoft.com/en-gb/windows/win32/direct3d9/d3dxmatrixlookatlh
+func DXLookAtLH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Matrix4x4
+{
+    let zAxis = (target - eye).normalized()
+    let xAxis = upAxis.cross(zAxis).normalized()
+    let yAxis = zAxis.cross(xAxis)
+
+    let colA = Vector4(xyz: xAxis, w: -xAxis.dot(eye))
+    let colB = Vector4(xyz: yAxis, w: -yAxis.dot(eye))
+    let colC = Vector4(xyz: zAxis, w: -zAxis.dot(eye))
+    let colD = Vector4(x:0, y:0, z:0, w:1)
+
+    return Matrix4x4(a: colA, b: colB, c: colC, d: colD)
+}
+
 final class Matrix4x4Tests: XCTestCase
 {
+    // NOTE: The following tests are exactly the same as for Matrix3x3, so won't be implemented
+    // func testRotationMatrixInX()
+    // func testRotationMatrixInY()
+    // func testRotationMatrixInZ()
+    // func testTranspositionOfIdentity()
+    // func testSetColumn()
+
     func testIdentityAndColumnAccessor()
     {
         let I = Matrix4x4.identity()
@@ -51,8 +88,47 @@ final class Matrix4x4Tests: XCTestCase
         XCTAssertEqual(I*V, V)
     }
 
-    // NOTE: The following tests are exactly the same as for Matrix3x3, so won't be implemented
-    // func testRotationMatrixInX()
-    // func testRotationMatrixInY()
-    // func testRotationMatrixInZ()
+    // Make sure the algorithm is equivalent to DirectX's row-major one
+    func testLookAtRH()
+    {
+        let eye    = Vector3(x:0, y:1, z:2)
+        let target = Vector3(x:3, y:4, z:5)
+        let up     = Vector3(x:0, y:1, z:0)
+
+        let mine = Matrix4x4.lookAtRH(eye: eye, target: target, upAxis: up)
+        let dxs  = DXLookAtRH(eye: eye, target: target, upAxis: up)
+
+        let identityVector = Vector4.identity()
+
+        let myResult = mine * identityVector
+        // NOTE: DirectX treats vectors as row matrices, so the multiplication is different
+        let dxResult = Vector4(x: identityVector.dot(dxs.getColumn(0)),
+                               y: identityVector.dot(dxs.getColumn(1)),
+                               z: identityVector.dot(dxs.getColumn(2)),
+                               w: identityVector.dot(dxs.getColumn(3)))
+
+        XCTAssertEqual(myResult, dxResult)
+    }
+
+    // Make sure the algorithm is equivalent to DirectX's row-major one
+    func testLookAtLH()
+    {
+        let eye    = Vector3(x:0, y:1, z:2)
+        let target = Vector3(x:3, y:4, z:5)
+        let up     = Vector3(x:0, y:1, z:0)
+
+        let mine = Matrix4x4.lookAtLH(eye: eye, target: target, upAxis: up)
+        let dxs  = DXLookAtLH(eye: eye, target: target, upAxis: up)
+
+        let identityVector = Vector4.identity()
+
+        let myResult = mine * identityVector
+        // NOTE: DirectX treats vectors as row matrices, so the multiplication is different
+        let dxResult = Vector4(x: identityVector.dot(dxs.getColumn(0)),
+                               y: identityVector.dot(dxs.getColumn(1)),
+                               z: identityVector.dot(dxs.getColumn(2)),
+                               w: identityVector.dot(dxs.getColumn(3)))
+
+        XCTAssertEqual(myResult, dxResult)
+    }
 }

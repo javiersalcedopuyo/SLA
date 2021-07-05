@@ -64,6 +64,46 @@ public struct Matrix4x4 : SquareMatrix
                                      w: 1.0))
     }
 
+    public static func lookAtRH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Self
+    {
+        let zAxis = Vector4( xyz: (target - eye).normalized(), w: 0.0)
+        let xAxis = Vector4( xyz: zAxis.xyz().cross(upAxis), w: 0.0).normalized()
+        let yAxis = Vector4( xyz: xAxis.xyz().cross(zAxis.xyz()), w: 0.0)
+
+        // Pre-multiply the translation
+        let Tx = -xAxis.xyz().dot(eye)
+        let Ty = -yAxis.xyz().dot(eye)
+        let Tz = -zAxis.xyz().dot(eye)
+        let translation = Vector4(x: Tx, y: Ty, z: Tz, w: 1)
+
+        let orientation = Matrix4x4(a: xAxis, b: yAxis, c: zAxis, d: Vector4.zero())
+
+        var lookAt = orientation.transposed()
+        lookAt.setColumn(idx: 3, val: translation)
+
+        return lookAt
+    }
+
+    public static func lookAtLH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Self
+    {
+        let zAxis = Vector4( xyz: (target - eye).normalized(), w: 0.0)
+        let xAxis = Vector4( xyz: upAxis.cross(zAxis.xyz()), w: 0.0).normalized()
+        let yAxis = Vector4( xyz: zAxis.xyz().cross(xAxis.xyz()), w: 0.0)
+
+        // Pre-multiply the translation
+        let Tx = -xAxis.xyz().dot(eye)
+        let Ty = -yAxis.xyz().dot(eye)
+        let Tz = -zAxis.xyz().dot(eye)
+        let translation = Vector4(x: Tx, y: Ty, z: Tz, w: 1)
+
+        let orientation = Matrix4x4(a: xAxis, b: yAxis, c: zAxis, d: Vector4.zero())
+
+        var lookAt = orientation.transposed()
+        lookAt.setColumn(idx: 3, val: translation)
+
+        return lookAt
+    }
+
     public func getColumn(_ col: Int) -> Vector4
     {
         assert(col <= self.contents.count,    "ERROR: Column \(col) is out of bounds.")
