@@ -13,8 +13,6 @@ public protocol SquareMatrix : Equatable
 
     func getColumn(_ col: Int) -> ColumnType
 
-    // TODO: static func perspective() -> Self
-
     // TODO: static func /(left: Self, right: Self) -> Self?
     // TODO: func inv() -> Self
     // TODO: func det() -> Float

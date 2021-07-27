@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Matrix4x4 : SquareMatrix
+ public struct Matrix4x4 : SquareMatrix
 {
     public let size = 4 * 4 * MemoryLayout<Float>.size
 
@@ -103,6 +103,103 @@ public struct Matrix4x4 : SquareMatrix
 
         return lookAt
     }
+
+    public static func perspectiveRH(fovy:        Float,
+                                     aspectRatio: Float,
+                                     near:        Float,
+                                     far:         Float)
+    -> Self
+    {
+        assert(aspectRatio > 0.0)
+        assert(far > near)
+
+        let g = 1.0 / tan(fovy * 0.5) // Distance to the projection plane
+        let k = far / (near - far)
+
+        var result = Self.zero()
+        result.set(col: 0, row: 0, val: g / aspectRatio)
+        result.set(col: 1, row: 1, val: g)
+        result.set(col: 2, row: 2, val: k)
+        result.set(col: 2, row: 3, val: -1)
+        result.set(col: 3, row: 2, val: near * k)
+
+        return result
+    }
+
+    public static func perspectiveLH(fovy:        Float,
+                                     aspectRatio: Float,
+                                     near:        Float,
+                                     far:         Float)
+    -> Self
+    {
+        assert(aspectRatio > 0.0)
+        assert(far > near)
+
+        let g = 1.0 / tan(fovy * 0.5) // Distance to the projection plane
+        let k = far / (far - near)
+
+        var result = Self.zero()
+        result.set(col: 0, row: 0, val: g / aspectRatio)
+        result.set(col: 1, row: 1, val: g)
+        result.set(col: 2, row: 2, val: k)
+        result.set(col: 2, row: 3, val: 1)
+        result.set(col: 3, row: 2, val: -near * k)
+
+        return result
+    }
+
+    // The reversed version uses more precision for far distances than near
+    // Keep in mind that using this requires inverting the depth test direction
+    public static func perspectiveReversedRH(fovy:        Float,
+                                             aspectRatio: Float,
+                                             near:        Float,
+                                             far:         Float)
+    -> Self
+    {
+        assert(aspectRatio > 0.0)
+        assert(far > near)
+
+        let g = 1.0 / tan(fovy * 0.5) // Distance to the projection plane
+        let k = near / (far - near)
+
+        var result = Self.zero()
+        result.set(col: 0, row: 0, val: g / aspectRatio)
+        result.set(col: 1, row: 1, val: g)
+        result.set(col: 2, row: 2, val: k)
+        result.set(col: 2, row: 3, val: -1)
+        result.set(col: 3, row: 2, val: far * k)
+
+        return result
+    }
+
+    public static func perspectiveReversedLH(fovy:        Float,
+                                             aspectRatio: Float,
+                                             near:        Float,
+                                             far:         Float)
+    -> Self
+    {
+        assert(aspectRatio > 0.0)
+        assert(far > near)
+
+        let g = 1.0 / tan(fovy * 0.5) // Distance to the projection plane
+        let k = near / (near - far)
+
+        var result = Self.zero()
+        result.set(col: 0, row: 0, val: g / aspectRatio)
+        result.set(col: 1, row: 1, val: g)
+        result.set(col: 2, row: 2, val: k)
+        result.set(col: 2, row: 3, val: 1)
+        result.set(col: 3, row: 2, val: -far * k)
+
+        return result
+    }
+
+    // TODO public static func perspectiveInfiniteRH() -> Self
+    // TODO public static func perspectiveInfiniteLH() -> Self
+    // TODO public static func perspectiveInfiniteReversedRH() -> Self
+    // TODO public static func perspectiveInfiniteReversedLH() -> Self
+    // TODO public static func orthographicRH() -> Self
+    // TODO public static func orthographicLH() -> Self
 
     public func getColumn(_ col: Int) -> Vector4
     {

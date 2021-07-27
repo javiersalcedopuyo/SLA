@@ -31,6 +31,46 @@ func DXLookAtLH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Matrix4x4
     return Matrix4x4(a: colA, b: colB, c: colC, d: colD)
 }
 
+// As seen on https://docs.microsoft.com/en-gb/windows/win32/direct3d9/d3dxmatrixperspectivefovlh?redirectedfrom=MSDN
+func DXPerspectiveLH(fovy:        Float,
+                     aspectRatio: Float,
+                     near:        Float,
+                     far:         Float)
+-> Matrix4x4
+{
+    let yScale = 1.0 / tan(fovy * 0.5)
+    let xScale = yScale / aspectRatio
+
+    var result = Matrix4x4.zero()
+    result.set(col: 0, row: 0, val: xScale)
+    result.set(col: 1, row: 1, val: yScale)
+    result.set(col: 2, row: 2, val: far / (far - near))
+    result.set(col: 3, row: 2, val: 1.0)
+    result.set(col: 2, row: 3, val: -near * far / (far - near))
+
+    return result
+}
+
+// As seen on https://docs.microsoft.com/en-gb/windows/win32/direct3d9/d3dxmatrixperspectivefovrh
+func DXPerspectiveRH(fovy:        Float,
+                     aspectRatio: Float,
+                     near:        Float,
+                     far:         Float)
+-> Matrix4x4
+{
+    let yScale = 1.0 / tan(fovy * 0.5)
+    let xScale = yScale / aspectRatio
+
+    var result = Matrix4x4.zero()
+    result.set(col: 0, row: 0, val: xScale)
+    result.set(col: 1, row: 1, val: yScale)
+    result.set(col: 2, row: 2, val: far / (near - far))
+    result.set(col: 3, row: 2, val: -1.0)
+    result.set(col: 2, row: 3, val: near * far / (near - far))
+
+    return result
+}
+
 final class Matrix4x4Tests: XCTestCase
 {
     // NOTE: The following tests are exactly the same as for Matrix3x3, so won't be implemented
@@ -130,5 +170,125 @@ final class Matrix4x4Tests: XCTestCase
                                w: identityVector.dot(dxs.getColumn(3)))
 
         XCTAssertEqual(myResult, dxResult)
+    }
+
+    func testPerspectiveRH()
+    {
+        let FOV_Y       = deg2rad(45)
+        let AR:   Float = 16/9
+        let NEAR: Float = 0.1
+        let FAR:  Float = 10
+
+        let point = Vector4(x:4, y:3, z:2, w:1)
+
+        let dxProj  = DXPerspectiveRH(fovy: FOV_Y,
+                                      aspectRatio: AR,
+                                      near: NEAR,
+                                      far: FAR)
+
+        let myProj  = Matrix4x4.perspectiveRH(fovy: FOV_Y,
+                                              aspectRatio: AR,
+                                              near: NEAR,
+                                              far: FAR)
+
+        let refDX   = Vector4(x: point.dot(dxProj.getColumn(0)),
+                              y: point.dot(dxProj.getColumn(1)),
+                              z: point.dot(dxProj.getColumn(2)),
+                              w: point.dot(dxProj.getColumn(3)))
+
+        let mine = myProj * point
+
+        XCTAssertEqual(refDX,  mine)
+    }
+
+    func testPerspectiveLH()
+    {
+        let FOV_Y       = deg2rad(45)
+        let AR:   Float = 16/9
+        let NEAR: Float = 0.1
+        let FAR:  Float = 10
+
+        let point = Vector4(x:4, y:3, z:2, w:1)
+
+        let dxProj  = DXPerspectiveLH(fovy: FOV_Y,
+                                      aspectRatio: AR,
+                                      near: NEAR,
+                                      far: FAR)
+
+        let myProj  = Matrix4x4.perspectiveLH(fovy: FOV_Y,
+                                              aspectRatio: AR,
+                                              near: NEAR,
+                                              far: FAR)
+
+        let refDX   = Vector4(x: point.dot(dxProj.getColumn(0)),
+                              y: point.dot(dxProj.getColumn(1)),
+                              z: point.dot(dxProj.getColumn(2)),
+                              w: point.dot(dxProj.getColumn(3)))
+
+        let mine = myProj * point
+
+        XCTAssertEqual(refDX,  mine)
+    }
+
+    func testReversedPerspectiveRH()
+    {
+        let FOV_Y       = deg2rad(45)
+        let AR:   Float = 16/9
+        let NEAR: Float = 0.1
+        let FAR:  Float = 10
+
+        let point = Vector4(x:4, y:3, z:2, w:1)
+
+        let proj = Matrix4x4.perspectiveRH(fovy: FOV_Y,
+                                           aspectRatio: AR,
+                                           near: NEAR,
+                                           far: FAR)
+
+        let revProj = Matrix4x4.perspectiveReversedRH(fovy: FOV_Y,
+                                                      aspectRatio: AR,
+                                                      near: NEAR,
+                                                      far: FAR)
+
+        let projectedPoint    = proj * point
+        let revProjectedPoint = revProj * point
+
+        XCTAssertEqual(projectedPoint.x(), revProjectedPoint.x())
+        XCTAssertEqual(projectedPoint.y(), revProjectedPoint.y())
+
+        let zProj1 = projectedPoint.z() / projectedPoint.w()
+        let zProj2 = revProjectedPoint.z() / revProjectedPoint.w()
+
+        XCTAssertEqual(zProj1, 1.0 - zProj2, accuracy: 0.0001)
+    }
+
+    func testReversedPerspectiveLH()
+    {
+        let FOV_Y       = deg2rad(45)
+        let AR:   Float = 16/9
+        let NEAR: Float = 0.1
+        let FAR:  Float = 10
+
+        let point = Vector4(x:4, y:3, z:2, w:1)
+
+        let proj = Matrix4x4.perspectiveLH(fovy: FOV_Y,
+                                           aspectRatio: AR,
+                                           near: NEAR,
+                                           far: FAR)
+
+        let revProj = Matrix4x4.perspectiveReversedLH(fovy: FOV_Y,
+                                                      aspectRatio: AR,
+                                                      near: NEAR,
+                                                      far: FAR)
+
+        let projectedPoint    = proj * point
+        let revProjectedPoint = revProj * point
+
+        XCTAssertEqual(projectedPoint.x(), revProjectedPoint.x())
+        XCTAssertEqual(projectedPoint.y(), revProjectedPoint.y())
+
+        let zProj1 = projectedPoint.z() / projectedPoint.w()
+        let zProj2 = revProjectedPoint.z() / revProjectedPoint.w()
+
+        XCTAssertEqual(zProj1, 1.0 - zProj2, accuracy: 0.0001)
     }
 }
