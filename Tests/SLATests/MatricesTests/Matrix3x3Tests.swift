@@ -3,6 +3,30 @@ import XCTest
 
 final class Matrix3x3Tests: XCTestCase
 {
+    func testEquals()
+    {
+        let A = Matrix3x3.identity()
+        let B = Matrix3x3.identity()
+
+        XCTAssertEqual(A, B)
+    }
+
+    func testNotEquals()
+    {
+        let A = Matrix3x3.identity()
+        let B = Matrix3x3.zero()
+
+        XCTAssertNotEqual(A, B)
+    }
+
+    func testSingleElementAccessor()
+    {
+        let I = Matrix3x3.identity()
+
+        XCTAssertEqual(I.get(col: 0, row: 0), 1.0)
+        XCTAssertEqual(I.get(col: 1, row: 0), 0.0)
+    }
+
     func testIdentityAndColumnAccessor()
     {
         let I = Matrix3x3.identity()
@@ -92,6 +116,19 @@ final class Matrix3x3Tests: XCTestCase
         XCTAssertEqual(A.getColumn(colIdx), newCol)
     }
 
+    func testSetSingleElement()
+    {
+        let X = 0
+        let Y = 0
+        let val: Float = 2.0
+
+        var A = Matrix3x3.identity()
+
+        A.set(col: X, row: Y, val: val)
+
+        XCTAssertEqual(A.get(col: X, row: Y), val)
+    }
+
     func testTransposition()
     {
         let M = Matrix3x3(a: Vector3(x:0, y:1, z:2),
@@ -100,11 +137,8 @@ final class Matrix3x3Tests: XCTestCase
 
         let Mt = M.transposed()
 
-        let cols = M.getDimensions()
-        let rows = cols // Square Matrix
-
-        for x in 0..<cols {
-            for y in 0..<rows
+        for x in 0..<M.dimension {
+            for y in 0..<M.dimension
             {
                 XCTAssertEqual(M.get(col: x, row: y), Mt.get(col:y, row:x))
             }

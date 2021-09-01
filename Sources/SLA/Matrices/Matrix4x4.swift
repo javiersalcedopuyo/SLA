@@ -2,17 +2,15 @@ import Foundation
 
  public struct Matrix4x4 : SquareMatrix
 {
-    public let size = 4 * 4 * MemoryLayout<Float>.size
+    public let dimension = 4;
+    public let size      = 4 * 4 * MemoryLayout<Float>.size
 
-    public var contents: [[Float]]
-    // (0,0) (1,0) (2,0) (3,0)
-    // (0,1) (1,1) (2,1) (3,1)
-    // (0,2) (1,2) (2,2) (3,2)
-    // (0,3) (1,3) (2,3) (3,3)
+    // NOTE: Column major
+    public var contents: [Float]
 
     public init(a: Vector4, b: Vector4, c: Vector4, d: Vector4)
     {
-        self.contents = [a.contents, b.contents, c.contents, d.contents]
+        self.contents  = a.contents + b.contents + c.contents + d.contents
     }
 
     public static func zero() -> Self
@@ -203,12 +201,13 @@ import Foundation
 
     public func getColumn(_ col: Int) -> Vector4
     {
-        assert(col <= self.contents.count,    "ERROR: Column \(col) is out of bounds.")
-        assert(self.contents[col].count == 4, "ERROR: Column \(col) is not a Vector4!.")
+        assert(col <= self.dimension, "ERROR: Column \(col) is out of bounds.")
 
-        return Vector4(x: self.contents[col][0],
-                       y: self.contents[col][1],
-                       z: self.contents[col][2],
-                       w: self.contents[col][3])
+        let i = col * self.dimension
+
+        return Vector4(x: self.contents[i+0],
+                       y: self.contents[i+1],
+                       z: self.contents[i+2],
+                       w: self.contents[i+3])
     }
 }

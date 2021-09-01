@@ -74,11 +74,15 @@ func DXPerspectiveRH(fovy:        Float,
 final class Matrix4x4Tests: XCTestCase
 {
     // NOTE: The following tests are exactly the same as for Matrix3x3, so won't be implemented
-    // func testRotationMatrixInX()
-    // func testRotationMatrixInY()
-    // func testRotationMatrixInZ()
-    // func testTranspositionOfIdentity()
-    // func testSetColumn()
+    // Equals
+    // NotEquals
+    // SingleElementAccessor
+    // SetSingleElement
+    // RotationMatrixInX
+    // RotationMatrixInY
+    // RotationMatrixInZ
+    // TranspositionOfIdentity
+    // SetColumn
 
     func testIdentityAndColumnAccessor()
     {

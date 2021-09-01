@@ -1,16 +1,15 @@
 import Foundation
 public struct Matrix3x3 : SquareMatrix
 {
-    public let size = 3 * 3 * MemoryLayout<Float>.size
+    public let dimension = 3
+    public let size      = 3 * 3 * MemoryLayout<Float>.size
 
-    public var contents: [[Float]]
-    // (0,0) (1,0) (2,0)
-    // (0,1) (1,1) (2,1)
-    // (0,2) (1,2) (2,2)
+    // NOTE: Column major
+    public var contents: [Float]
 
     public init(a: Vector3, b: Vector3, c: Vector3)
     {
-        self.contents = [a.contents, b.contents, c.contents]
+        self.contents = a.contents + b.contents + c.contents
     }
 
     public static func zero() -> Self
@@ -31,12 +30,13 @@ public struct Matrix3x3 : SquareMatrix
 
     public func getColumn(_ col: Int) -> Vector3
     {
-        assert(col <= self.contents.count,    "ERROR: Column \(col) is out of bounds.")
-        assert(self.contents[col].count == 3, "ERROR: Column \(col) is not a Vector3!.")
+        assert(col <= self.dimension, "ERROR: Column \(col) is out of bounds.")
 
-        return Vector3(x: self.contents[col][0],
-                       y: self.contents[col][1],
-                       z: self.contents[col][2])
+        let i = col * self.dimension
+
+        return Vector3(x: self.contents[i+0],
+                       y: self.contents[i+1],
+                       z: self.contents[i+2])
     }
 
     public static func makeRotation(radians: Float, axis: Vector3) -> Self

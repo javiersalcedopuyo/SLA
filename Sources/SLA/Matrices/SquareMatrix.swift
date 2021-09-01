@@ -3,8 +3,9 @@ public protocol SquareMatrix : Equatable
 {
     associatedtype ColumnType: Vector where ColumnType.ItemType == Float
 
-    var contents: [[Float]] {get set} // TODO: Single array
-    var size: Int { get }
+    var size:      Int     { get }
+    var dimension: Int     { get }
+    var contents:  [Float] { get set }
 
     static func zero()     -> Self
     static func identity() -> Self
@@ -22,81 +23,66 @@ public protocol SquareMatrix : Equatable
 
 public extension SquareMatrix
 {
-    func getDimensions() -> Int
-    {
-        return self.contents.count
-    }
-
     func get(col: Int, row: Int) -> Float
     {
-        assert(col < self.contents.count,    "ERROR: Column \(col) is out of bounds")
-        assert(row < self.contents[0].count, "ERROR: Row \(row) is out of bounds")
+        assert(col < self.dimension, "ERROR: Column \(col) is out of bounds")
+        assert(row < self.dimension, "ERROR: Row \(row) is out of bounds")
 
-        return self.contents[col][row]
+        let i = col * self.dimension + row
+
+        return self.contents[i]
     }
+
+    func asSingleArray() -> [Float] { return self.contents }
 
     mutating func set(col: Int, row: Int, val: Float)
     {
-        assert(col < self.contents.count,    "ERROR: Column \(col) is out of bounds")
-        assert(row < self.contents[0].count, "ERROR: Row \(row) is out of bounds")
+        assert(col < self.dimension, "ERROR: Column \(col) is out of bounds")
+        assert(row < self.dimension, "ERROR: Row \(row) is out of bounds")
 
-        self.contents[col][row] = val
+        let i = col * self.dimension + row
+        self.contents[i] = val
     }
 
     mutating func setColumn(idx: Int, val: ColumnType)
     {
-        for i in 0..<self.getDimensions()
+        let col = idx * self.dimension
+        for i in 0..<dimension
         {
-            self.contents[idx][i] = val[i]
+            self.contents[col+i] = val[i]
         }
-    }
-
-    func asSingleArray() -> [Float]
-    {
-        var result = [Float]()
-        for column in self.contents {
-            for value in column
-            {
-                result.append(value)
-            }
-        }
-        return result
     }
 
     // OPERATORS
     static func +(left: Self, right: Self) -> Self
     {
-        let n = left.getDimensions()
-        var result = left
-        for i in 0..<n {
-            for j in 0..<n
-            {
-                let x = left.get(col:i, row:j) + right.get(col:i, row:j)
-                result.set(col:i, row:j, val:x)
-            }
-        }
+        assert(left.dimension == right.dimension)
 
+        var result = Self.zero()
+        for i in 0..<left.dimension
+        {
+            result.contents[i] = left.contents[i] + right.contents[i];
+        }
         return result
     }
 
     static func -(left: Self, right: Self) -> Self
     {
-        let n = left.getDimensions()
-        var result = left
-        for i in 0..<n {
-            for j in 0..<n
-            {
-                let x = left.get(col:i, row:j) - right.get(col:i, row:j)
-                result.set(col:i, row:j, val:x)
-            }
-        }
+        assert(left.dimension == right.dimension)
 
+        var result = Self.zero()
+        for i in 0..<left.dimension
+        {
+            result.contents[i] = left.contents[i] - right.contents[i];
+        }
         return result
     }
 
-    static func *(right: Self, left: Self) -> Self
+    static func *(left: Self, right: Self) -> Self
     {
-        let n = right.getDimensions()
+        assert(left.dimension == right.dimension)
+
+        let n = right.dimension
 
         var result = right
         for i in 0..<n {
@@ -115,7 +101,9 @@ public extension SquareMatrix
 
     static func *(left: Self, right: ColumnType) -> ColumnType
     {
-        let n = left.getDimensions()
+        assert(left.dimension == right.contents.count)
+
+        let n = left.dimension
 
         var result = ColumnType.zero()
         for i in 0..<n {
@@ -129,29 +117,21 @@ public extension SquareMatrix
 
     static func ==(left: Self, right: Self) -> Bool
     {
-        let n = left.getDimensions()
+        if left.dimension != right.dimension { return false }
 
-        var result = true
-        for i in 0..<n {
-            for j in 0..<n
-            {
-                let a = left.get(col:i, row:j)
-                let b = right.get(col:i, row:j)
-                result = a == b
-                if !result { break }
-            }
+        for i in 0..<left.dimension
+        {
+            if left.contents[i] != right.contents[i] { return false }
         }
-        return result
+        return true
     }
 
     func transposed() -> Self
     {
-        var transposed   = Self.zero()
-        let cols = self.getDimensions()
-        let rows = cols // Square Matrix
+        var transposed = Self.zero()
 
-        for x in 0..<cols {
-            for y in 0..<rows
+        for x in 0..<dimension {
+            for y in 0..<dimension
             {
                 transposed.set(col: y, row: x, val: self.get(col: x, row: y))
             }
