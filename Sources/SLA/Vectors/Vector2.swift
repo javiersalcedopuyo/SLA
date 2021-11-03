@@ -5,13 +5,6 @@ public extension Vector2
     static func identity() -> Self { Self.one }
     static func zero()     -> Self { Self.zero } // To keep previous API behaviour
 
-    static func lerp(from: Self, to: Self, t: Float)  -> Self
-    {
-        if      t <= 0.0 { return from }
-        else if t >= 1.0 { return to }
-        else             { return from + (to - from) * t }
-    }
-
     // MARK: - Accessors
     // To keep previous API behaviour
     func x() -> Float { self.x }

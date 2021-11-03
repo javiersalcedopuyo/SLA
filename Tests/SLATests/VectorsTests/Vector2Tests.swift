@@ -8,7 +8,7 @@ final class Vector2Tests: XCTestCase
         let a = Vector2.zero()
         let b = Vector2.identity()
 
-        XCTAssertEqual( Vector2.lerp(from: a, to: b, t: -1.0), a )
+        XCTAssertEqual( lerp(from: a, to: b, t: -1.0), a )
     }
 
     func testLerpT0()
@@ -16,7 +16,7 @@ final class Vector2Tests: XCTestCase
         let a = Vector2.zero()
         let b = Vector2.identity()
 
-        XCTAssertEqual( Vector2.lerp(from: a, to: b, t: 0.0), a )
+        XCTAssertEqual( lerp(from: a, to: b, t: 0.0), a )
     }
 
     func testLerpT0_5()
@@ -24,7 +24,7 @@ final class Vector2Tests: XCTestCase
         let a = Vector2.zero()
         let b = Vector2.identity()
 
-        XCTAssertEqual( Vector2.lerp(from: a, to: b, t: 0.5), b * 0.5 )
+        XCTAssertEqual( lerp(from: a, to: b, t: 0.5), b * 0.5 )
     }
 
     func testLerpT1()
@@ -32,7 +32,7 @@ final class Vector2Tests: XCTestCase
         let a = Vector2.zero()
         let b = Vector2.identity()
 
-        XCTAssertEqual( Vector2.lerp(from: a, to: b, t: 1.0), b )
+        XCTAssertEqual( lerp(from: a, to: b, t: 1.0), b )
     }
 
     func testLerpTGreaterThan1()
@@ -40,7 +40,7 @@ final class Vector2Tests: XCTestCase
         let a = Vector2.zero()
         let b = Vector2.identity()
 
-        XCTAssertEqual( Vector2.lerp(from: a, to: b, t: 1.5), b )
+        XCTAssertEqual( lerp(from: a, to: b, t: 1.5), b )
     }
 
     func testOrthogonalDotProduct()
