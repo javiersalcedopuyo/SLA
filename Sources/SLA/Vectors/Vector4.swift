@@ -1,32 +1,55 @@
-public struct Vector4 : Vector
+public typealias Vector4 = SIMD4<Float>
+
+public extension Vector4
 {
-    public static let size = 4 * MemoryLayout<Float>.size
-    public var contents: [Float]
+    // MARK: - Initialisers
+    init(xyz: Vector3, w: Float) { self.init(xyz.x, xyz.y, xyz.z, w) }
+    static func identity() -> Self { Self.one }
+    static func zero()     -> Self { Self.zero } // To keep previous API behaviour
 
-    // INITIALISERS
-    public init(x: Float, y: Float, z: Float, w: Float) { contents = [x, y, z, w] }
-    public init(r: Float, g: Float, b: Float, a: Float) { contents = [r, g, b, a] }
-    public init(xyz: Vector3, w: Float) { contents = [xyz.x(), xyz.y(), xyz.z(), w] }
-    public static func zero()     -> Self                   { return Vector4(x:0, y:0, z:0, w: 0) }
-    public static func identity() -> Self                   { return Vector4(x:1, y:1, z:1, w: 1) }
-
-    // ACCESSORS
-    public func x() -> Float { return self.contents[0] }
-    public func y() -> Float { return self.contents[1] }
-    public func z() -> Float { return self.contents[2] }
-    public func w() -> Float { return self.contents[3] }
-    public func r() -> Float { return self.contents[0] }
-    public func g() -> Float { return self.contents[1] }
-    public func b() -> Float { return self.contents[2] }
-    public func a() -> Float { return self.contents[3] }
-
-    public func xyz() -> Vector3 { return Vector3(x: self.x(), y: self.y(), z: self.z()) }
-    // TODO: More combinations
-
-    public static func lerp(from: Self, to: Self, t: Float)  -> Self
+    // MARK: - Static methods
+    static func lerp(from: Self, to: Self, t: Float)  -> Self
     {
         if      t <= 0.0 { return from }
         else if t >= 1.0 { return to }
         else             { return from + (to - from) * t }
     }
+
+    // MARK: - Accessors
+    // To keep previous API behaviour
+    func x() -> Float { self.x }
+    func y() -> Float { self.y }
+    func z() -> Float { self.z }
+    func w() -> Float { self.w }
+
+    func r() -> Float { self.x }
+    func g() -> Float { self.y }
+    func b() -> Float { self.z }
+    func a() -> Float { self.w }
+
+    func xyz() -> Vector3 { return Vector3(self.x, self.y, self.z) }
+    func rgb() -> Vector3 { return Vector3(self.x, self.y, self.z) }
+    // TODO: More combinations
+
+    // MARK: - Operators
+    func dot (_ right: Self) -> Float
+    {
+        return  self.x * right.x +
+                self.y * right.y +
+                self.z * right.z +
+                self.w * right.w
+    }
+
+    func norm2() -> Float { return self.dot(self) }
+    func norm()  -> Float { return self.dot(self).squareRoot() }
+
+    func normalized() -> Self
+    {
+        let n = self.norm2()
+        return n > 0 ? self / n.squareRoot()
+                     : Self.zero
+    }
+
+    func projectOnto(_ b: Self) -> Self { return b * (self.dot(b) / b.norm2()) }
+    func reject(_ b: Self)      -> Self { return self - self.projectOnto(b) }
 }

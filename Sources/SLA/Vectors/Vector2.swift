@@ -1,21 +1,35 @@
-public struct Vector2 : Vector
+public typealias Vector2 = SIMD2<Float>
+
+public extension Vector2
 {
-    public static let size = 2 * MemoryLayout<Float>.size
-    public var contents: [Float]
+    static func identity() -> Self { Self.one }
+    static func zero()     -> Self { Self.zero } // To keep previous API behaviour
 
-    // INITIALISERS
-    public init(x: Float, y: Float)     { contents = [x, y] }
-    public static func zero()     -> Self { return Vector2(x:0, y:0) }
-    public static func identity() -> Self { return Vector2(x:1, y:1) }
-
-    // ACCESSORS
-    public func x() -> Float { return self.contents[0] }
-    public func y() -> Float { return self.contents[1] }
-
-    public static func lerp(from: Self, to: Self, t: Float)  -> Self
+    static func lerp(from: Self, to: Self, t: Float)  -> Self
     {
         if      t <= 0.0 { return from }
         else if t >= 1.0 { return to }
         else             { return from + (to - from) * t }
     }
+
+    // MARK: - Accessors
+    // To keep previous API behaviour
+    func x() -> Float { self.x }
+    func y() -> Float { self.y }
+
+    // MARK: - Operators
+    func dot(_ right: Self) -> Float { self.x * right.x + self.y * right.y }
+
+    func norm2() -> Float { return self.dot(self) }
+    func norm()  -> Float { return self.dot(self).squareRoot() }
+
+    func normalized() -> Self
+    {
+        let n = self.norm2()
+        return n > 0 ? self / n.squareRoot()
+                     : Self.zero
+    }
+
+    func projectOnto(_ b: Self) -> Self { return b * (self.dot(b) / b.norm2()) }
+    func reject(_ b: Self)      -> Self { return self - self.projectOnto(b) }
 }

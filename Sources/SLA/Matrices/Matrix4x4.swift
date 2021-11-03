@@ -1,24 +1,24 @@
 import Foundation
 
- public struct Matrix4x4 : SquareMatrix
+public struct Matrix4x4 : SquareMatrix
 {
-    public let dimension = 4;
-    public let size      = 4 * 4 * MemoryLayout<Float>.size
+    public let dimension = 4
+    public let size      = 4 * MemoryLayout<Vector4>.size
 
     // NOTE: Column major
-    public var contents: [Float]
+    public var contents: [Vector4]
 
     public init(a: Vector4, b: Vector4, c: Vector4, d: Vector4)
     {
-        self.contents  = a.contents + b.contents + c.contents + d.contents
+        self.contents  = [a, b, c, d]
     }
 
     public static func zero() -> Self
     {
-        return Matrix4x4(a: Vector4.zero(),
-                         b: Vector4.zero(),
-                         c: Vector4.zero(),
-                         d: Vector4.zero())
+        return Matrix4x4(a: Vector4.zero,
+                         b: Vector4.zero,
+                         c: Vector4.zero,
+                         d: Vector4.zero)
     }
 
     public static func identity() -> Self
@@ -37,24 +37,24 @@ import Foundation
         let s = sin(radians)
         let d = 1.0 - c
 
-        let x  = axis.x() * d
-        let y  = axis.y() * d
-        let z  = axis.z() * d
-        let xy = x * axis.y()
-        let xz = x * axis.z()
-        let yz = y * axis.z()
+        let x  = axis.x * d
+        let y  = axis.y * d
+        let z  = axis.z * d
+        let xy = x * axis.y
+        let xz = x * axis.z
+        let yz = y * axis.z
 
-        return Matrix4x4 (a: Vector4(x: c  + x * axis.x(),
-                                     y: xy + s * axis.z(),
-                                     z: xz - s * axis.y(),
+        return Matrix4x4 (a: Vector4(x: c  + x * axis.x,
+                                     y: xy + s * axis.z,
+                                     z: xz - s * axis.y,
                                      w: 0.0),
-                          b: Vector4(x: xy - s * axis.z(),
-                                     y: c  + y * axis.y(),
-                                     z: yz + s * axis.x(),
+                          b: Vector4(x: xy - s * axis.z,
+                                     y: c  + y * axis.y,
+                                     z: yz + s * axis.x,
                                      w: 0.0),
-                          c: Vector4(x: xz + s * axis.y(),
-                                     y: yz - s * axis.x(),
-                                     z: c  + z * axis.z(),
+                          c: Vector4(x: xz + s * axis.y,
+                                     y: yz - s * axis.x,
+                                     z: c  + z * axis.z,
                                      w: 0.0),
                           d: Vector4(x: 0.0,
                                      y: 0.0,
@@ -74,7 +74,7 @@ import Foundation
         let Tz = -zAxis.xyz().dot(eye)
         let translation = Vector4(x: Tx, y: Ty, z: Tz, w: 1)
 
-        let orientation = Matrix4x4(a: xAxis, b: yAxis, c: zAxis, d: Vector4.zero())
+        let orientation = Matrix4x4(a: xAxis, b: yAxis, c: zAxis, d: Vector4.zero)
 
         var lookAt = orientation.transposed()
         lookAt.setColumn(idx: 3, val: translation)
@@ -94,7 +94,7 @@ import Foundation
         let Tz = -zAxis.xyz().dot(eye)
         let translation = Vector4(x: Tx, y: Ty, z: Tz, w: 1)
 
-        let orientation = Matrix4x4(a: xAxis, b: yAxis, c: zAxis, d: Vector4.zero())
+        let orientation = Matrix4x4(a: xAxis, b: yAxis, c: zAxis, d: Vector4.zero)
 
         var lookAt = orientation.transposed()
         lookAt.setColumn(idx: 3, val: translation)
@@ -198,16 +198,4 @@ import Foundation
     // TODO public static func perspectiveInfiniteReversedLH() -> Self
     // TODO public static func orthographicRH() -> Self
     // TODO public static func orthographicLH() -> Self
-
-    public func getColumn(_ col: Int) -> Vector4
-    {
-        assert(col <= self.dimension, "ERROR: Column \(col) is out of bounds.")
-
-        let i = col * self.dimension
-
-        return Vector4(x: self.contents[i+0],
-                       y: self.contents[i+1],
-                       z: self.contents[i+2],
-                       w: self.contents[i+3])
-    }
 }

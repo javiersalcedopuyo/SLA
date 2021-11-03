@@ -1,18 +1,17 @@
 // NOTE: Column-major
 public protocol SquareMatrix : Equatable
 {
-    associatedtype ColumnType: Vector where ColumnType.ItemType == Float
+    associatedtype ColumnType: SIMD where ColumnType.Scalar: FloatingPoint
+    typealias ElementType = Self.ColumnType.Scalar
 
     var size:      Int     { get }
     var dimension: Int     { get }
-    var contents:  [Float] { get set }
+    var contents:  [ColumnType] { get set }
 
     static func zero()     -> Self
     static func identity() -> Self
 
     static func makeRotation(radians: Float, axis: ColumnType) -> Self
-
-    func getColumn(_ col: Int) -> ColumnType
 
     // TODO: static func /(left: Self, right: Self) -> Self?
     // TODO: func inv() -> Self
@@ -23,37 +22,44 @@ public protocol SquareMatrix : Equatable
 
 public extension SquareMatrix
 {
-    func get(col: Int, row: Int) -> Float
+    // MARK: - Getters and Setters
+    func get(col: Int, row: Int) -> ElementType
     {
         assert(col < self.dimension, "ERROR: Column \(col) is out of bounds")
         assert(row < self.dimension, "ERROR: Row \(row) is out of bounds")
-
-        let i = col * self.dimension + row
-
-        return self.contents[i]
+        return self.contents[col][row]
     }
 
-    func asSingleArray() -> [Float] { return self.contents }
-
-    mutating func set(col: Int, row: Int, val: Float)
+    func getColumn(_ idx: Int) -> ColumnType
     {
-        assert(col < self.dimension, "ERROR: Column \(col) is out of bounds")
-        assert(row < self.dimension, "ERROR: Row \(row) is out of bounds")
-
-        let i = col * self.dimension + row
-        self.contents[i] = val
+        assert(idx < self.contents.indices.count)
+        return self.contents[idx]
     }
-
-    mutating func setColumn(idx: Int, val: ColumnType)
+    
+    func asSingleArray() -> [ElementType]
     {
-        let col = idx * self.dimension
-        for i in 0..<dimension
+        var result: [ElementType] = []
+        for x in 0..<self.dimension
         {
-            self.contents[col+i] = val[i]
+            for y in 0..<self.dimension
+            {
+                result.append( self.get(col: x, row: y) )
+            }
         }
+        return result
     }
 
-    // OPERATORS
+    mutating func set(col: Int, row: Int, val: ElementType)
+    {
+        assert(col < self.dimension, "ERROR: Column \(col) is out of bounds")
+        assert(row < self.dimension, "ERROR: Row \(row) is out of bounds")
+
+        self.contents[col][row] = val
+    }
+
+    mutating func setColumn(idx: Int, val: ColumnType) { self.contents[idx] = val }
+
+    // MARK: - Operators
     static func +(left: Self, right: Self) -> Self
     {
         assert(left.dimension == right.dimension)
@@ -88,7 +94,7 @@ public extension SquareMatrix
         for i in 0..<n {
             for j in 0..<n
             {
-                var accumulated :Float = 0.0
+                var accumulated :ElementType = 0
                 for k in 0..<n
                 {
                     accumulated += left.get(col:k, row:j) * right.get(col:i, row: k)
@@ -101,11 +107,11 @@ public extension SquareMatrix
 
     static func *(left: Self, right: ColumnType) -> ColumnType
     {
-        assert(left.dimension == right.contents.count)
+        assert(left.dimension == right.indices.count)
 
         let n = left.dimension
 
-        var result = ColumnType.zero()
+        var result = ColumnType.zero
         for i in 0..<n {
             for j in 0..<n
             {

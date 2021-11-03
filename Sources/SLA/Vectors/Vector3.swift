@@ -1,34 +1,57 @@
-public struct Vector3 : Vector
+public typealias Vector3 = SIMD3<Float>
+
+public extension Vector3
 {
-    public static let size = 3 * MemoryLayout<Float>.size
-    public var contents: [Float]
+    static func identity() -> Self { Self.one }
+    static func zero()     -> Self { Self.zero } // To keep previous API behaviour
 
-    // INITIALISERS
-    public init(x: Float, y: Float, z: Float) { contents = [x, y, z] }
-    public init(r: Float, g: Float, b: Float) { contents = [r, g, b] }
-    public static func zero()     -> Self        { return Vector3(x:0, y:0, z:0) }
-    public static func identity() -> Self        { return Vector3(x:1, y:1, z:1) }
-
-    // ACCESSORS
-    public func x() -> Float { return self.contents[0] }
-    public func y() -> Float { return self.contents[1] }
-    public func z() -> Float { return self.contents[2] }
-    public func r() -> Float { return self.contents[0] }
-    public func g() -> Float { return self.contents[1] }
-    public func b() -> Float { return self.contents[2] }
-
-    // VECTOR ARITHMETIC
-    public func cross(_ right: Self) -> Self
-    {
-        return Vector3(x: self.y() * right.z() - self.z() * right.y(),
-                       y: self.z() * right.x() - self.x() * right.z(),
-                       z: self.x() * right.y() - self.y() * right.x())
-    }
-
-    public static func lerp(from: Self, to: Self, t: Float)  -> Self
+    static func lerp(from: Self, to: Self, t: Float)  -> Self
     {
         if      t <= 0.0 { return from }
         else if t >= 1.0 { return to }
         else             { return from + (to - from) * t }
     }
+
+    // MARK: - Accessors
+    // To keep previous API behaviour
+    func x() -> Float { self.x }
+    func y() -> Float { self.y }
+    func z() -> Float { self.z }
+
+    func r() -> Float { self.x }
+    func g() -> Float { self.y }
+    func b() -> Float { self.z }
+
+    func xy() -> Vector2 { Vector2(self.x, self.y) }
+    func yz() -> Vector2 { Vector2(self.y, self.z) }
+    func rg() -> Vector2 { Vector2(self.x, self.y) }
+    func gb() -> Vector2 { Vector2(self.y, self.z) }
+
+    // MARK: - Operators
+    func dot (_ right: Self) -> Float
+    {
+        return  self.x * right.x +
+                self.y * right.y +
+                self.z * right.z
+    }
+
+    func cross(_ right: Self) -> Self
+    {
+        return Vector3(x: self.y * right.z - self.z * right.y,
+                       y: self.z * right.x - self.x * right.z,
+                       z: self.x * right.y - self.y * right.x)
+    }
+
+    func norm2() -> Float { return self.dot(self) }
+    func norm()  -> Float { return self.dot(self).squareRoot() }
+
+    func normalized() -> Self
+    {
+        let n = self.norm2()
+        return n > 0 ? self / n.squareRoot()
+                     : Self.zero
+    }
+
+    func projectOnto(_ b: Self) -> Self { return b * (self.dot(b) / b.norm2()) }
+    func reject(_ b: Self)      -> Self { return self - self.projectOnto(b) }
 }
