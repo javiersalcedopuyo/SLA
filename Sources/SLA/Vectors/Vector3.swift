@@ -47,4 +47,7 @@ public extension Vector3
 
     func projectOnto(_ b: Self) -> Self { return b * (self.dot(b) / b.norm2()) }
     func reject(_ b: Self)      -> Self { return self - self.projectOnto(b) }
+
+    // MARK: - Transforms
+    func scaled(_ s: Vector3) -> Vector3 { return self * s }
 }

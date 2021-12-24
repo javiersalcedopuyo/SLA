@@ -152,4 +152,58 @@ final class Matrix3x3Tests: XCTestCase
 
         XCTAssertEqual(I, It)
     }
+
+    func testScalingIdentity()
+    {
+        let scale     = Vector3(x: 1, y: 2, z: 3)
+        let reference = Matrix3x3.makeScale(scalePerAxis: scale)
+        let I         = Matrix3x3.identity()
+
+        XCTAssertEqual(I.scaled(scalePerAxis: scale), reference)
+    }
+
+    func testMultAssignByScalar()
+    {
+        let scalar: Float = 10.0
+        var M = Matrix3x3.identity()
+        M *= scalar
+
+        for i in 0..<M.dimension
+        {
+            XCTAssertEqual(M.get(col: i, row: i), scalar)
+        }
+    }
+
+    func testMultByScalar()
+    {
+        let scalar: Float = 10.0
+        let M = Matrix3x3.identity() * scalar
+
+        for i in 0..<M.dimension
+        {
+            XCTAssertEqual(M.get(col: i, row: i), scalar)
+        }
+    }
+
+    func testDivideAssignByScalar()
+    {
+        var M = Matrix3x3.identity()
+        M /= 2.0
+
+        for i in 0..<M.dimension
+        {
+            XCTAssertEqual(M.get(col:i, row:i), 0.5)
+        }
+    }
+
+    func testDivideByScalar()
+    {
+        let I = Matrix3x3.identity()
+        let M = I / 2.0
+
+        for i in 0..<M.dimension
+        {
+            XCTAssertEqual(M.get(col:i, row:i), 0.5)
+        }
+    }
 }

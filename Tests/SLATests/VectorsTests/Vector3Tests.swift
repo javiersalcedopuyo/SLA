@@ -92,4 +92,13 @@ final class Vector3Tests: XCTestCase
     {
         XCTAssertEqual(Vector3.zero().normalized(), Vector3.zero())
     }
+
+    func testScale()
+    {
+        let v   = Vector3(x: 0, y: 1, z: 2)
+        let s   = Vector3(x: 3, y: 4, z: 5)
+        let ref = Vector3(x: 0, y: 4, z: 10)
+
+        XCTAssertEqual(v.scaled(s), ref)
+    }
 }

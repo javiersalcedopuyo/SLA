@@ -83,6 +83,7 @@ final class Matrix4x4Tests: XCTestCase
     // RotationMatrixInZ
     // TranspositionOfIdentity
     // SetColumn
+    // ScalingIdentity
 
     func testIdentityAndColumnAccessor()
     {

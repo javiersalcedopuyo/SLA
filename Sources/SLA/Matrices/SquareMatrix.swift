@@ -121,6 +121,36 @@ public extension SquareMatrix
         return result
     }
 
+    static func /=(left: inout Self, right: ColumnType.Scalar)
+    {
+        left = left / right
+    }
+
+    static func /(left: Self, right: ColumnType.Scalar) -> Self
+    {
+        return left * (1/right)
+    }
+
+    static func *=(left: inout Self, right: ColumnType.Scalar)
+    {
+        left = left * right
+    }
+
+    static func *(left: Self, right: ColumnType.Scalar) -> Self
+    {
+        var result = left
+        for y in 0..<left.dimension
+        {
+            for x in 0..<left.dimension
+            {
+                let value = result.get(col: x, row: y) * right
+                result.set(col: x, row: y, val: value)
+            }
+        }
+        return result
+    }
+
+
     static func ==(left: Self, right: Self) -> Bool
     {
         if left.dimension != right.dimension { return false }
@@ -132,6 +162,7 @@ public extension SquareMatrix
         return true
     }
 
+    // MARK: - Manipulation
     func transposed() -> Self
     {
         var transposed = Self.zero()
@@ -144,5 +175,25 @@ public extension SquareMatrix
         }
 
         return transposed
+    }
+
+    // TODO: func calculateDeterminant() -> ElementType
+
+    // MARK: - Transforms
+    func scaled(scalePerAxis: ColumnType) -> Self
+    {
+        return Self.makeScale(scalePerAxis: scalePerAxis) * self
+    }
+
+    static func makeScale(scalePerAxis: ColumnType) -> Self
+    {
+        var result = Self.identity()
+
+        for i in scalePerAxis.indices
+        {
+            result.set(col: i, row: i, val: scalePerAxis[i])
+        }
+
+        return result
     }
 }
