@@ -35,7 +35,7 @@ public extension SquareMatrix
         assert(idx < self.contents.indices.count)
         return self.contents[idx]
     }
-    
+
     func asSingleArray() -> [ElementType]
     {
         var result: [ElementType] = []
@@ -139,13 +139,9 @@ public extension SquareMatrix
     static func *(left: Self, right: ColumnType.Scalar) -> Self
     {
         var result = left
-        for y in 0..<left.dimension
+        for i in 0..<left.contents.count
         {
-            for x in 0..<left.dimension
-            {
-                let value = result.get(col: x, row: y) * right
-                result.set(col: x, row: y, val: value)
-            }
+            result.contents[i] = left.contents[i] * right
         }
         return result
     }
