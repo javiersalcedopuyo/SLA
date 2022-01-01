@@ -1,6 +1,19 @@
 import XCTest
 @testable import SLA
 
+func FuzzyAssertEq(left: Matrix4x4, right: Matrix4x4, accuracy: Float)
+{
+    for i in 0..<4
+    {
+        for ii in 0..<4
+        {
+            XCTAssertEqual(left.contents[i][ii],
+                           right.contents[i][ii],
+                           accuracy: accuracy)
+        }
+    }
+}
+
 // As seen on https://docs.microsoft.com/en-gb/windows/win32/direct3d9/d3dxmatrixlookatlh
 func DXLookAtRH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Matrix4x4
 {
@@ -295,5 +308,24 @@ final class Matrix4x4Tests: XCTestCase
         let zProj2 = revProjectedPoint.z() / revProjectedPoint.w()
 
         XCTAssertEqual(zProj1, 1.0 - zProj2, accuracy: 0.0001)
+    }
+
+    func testRotateOnY180()
+    {
+        let UP     = Vector4(x:0, y:1, z:0, w:0)
+        let TARGET = Vector3(x:0, y:0, z:1)
+
+        var M = Matrix4x4.lookAtLH(eye:    Vector3.zero(),
+                                   target: TARGET,
+                                   upAxis: UP.xyz())
+
+        let R = Matrix4x4.makeRotation(radians: 0.5 * TAU,
+                                       axis:    UP)
+
+        let expected = Matrix4x4.lookAtLH(eye:    Vector3.zero(),
+                                          target: -TARGET,
+                                          upAxis: UP.xyz())
+        M.rotate(R: R)
+        FuzzyAssertEq(left: M, right: expected, accuracy: 0.0001)
     }
 }

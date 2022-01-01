@@ -192,4 +192,6 @@ public extension SquareMatrix
 
         return result
     }
+
+    mutating func rotate(R: Self) { self = R * self }
 }
