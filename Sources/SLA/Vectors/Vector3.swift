@@ -1,5 +1,12 @@
 public typealias Vector3 = SIMD3<Float>
 
+// MARK: Utils
+func areParallel(_ a: Vector3, _ b: Vector3) -> Bool
+{
+    // FIXME: This is just a quick hack to work around the floating point precision issues
+    return abs(abs(a.dot(b)) - (a.norm() * b.norm())) <= 0.000002
+}
+
 public extension Vector3
 {
     static func identity() -> Self { Self.one }
@@ -47,6 +54,7 @@ public extension Vector3
 
     func projectOnto(_ b: Self) -> Self { return b * (self.dot(b) / b.norm2()) }
     func reject(_ b: Self)      -> Self { return self - self.projectOnto(b) }
+
 
     // MARK: - Transforms
     func scaled(_ s: Vector3) -> Vector3 { return self * s }

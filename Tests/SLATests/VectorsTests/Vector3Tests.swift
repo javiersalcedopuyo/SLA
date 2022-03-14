@@ -61,6 +61,14 @@ final class Vector3Tests: XCTestCase
         XCTAssertEqual( a.dot(b), normsProduct, accuracy: 0.0001)
     }
 
+    func testDotProductOfOppositeVectors()
+    {
+        let a = Vector3( x:1.0, y:2.0, z:3.0 )
+        let b = -a
+
+        XCTAssertEqual(a.dot(b), -a.norm2());
+    }
+
     func testCrossProduct()
     {
         let x = Vector3( x:1.0, y:0.0, z:0.0 )
@@ -100,5 +108,29 @@ final class Vector3Tests: XCTestCase
         let ref = Vector3(x: 0, y: 4, z: 10)
 
         XCTAssertEqual(v.scaled(s), ref)
+    }
+
+    func testAreParallel()
+    {
+        let a = Vector3( x:1.0, y:2.0, z:3.0 )
+        let b = Vector3( x:2.0, y:4.0, z:6.0 )
+
+        XCTAssertTrue(areParallel(a, b))
+    }
+
+    func testNonParallel()
+    {
+        let a = Vector3( x:1.0, y:2.0, z:3.0 )
+        let b = Vector3( x:4.0, y:5.0, z:6.0 )
+
+        XCTAssertFalse(areParallel(a, b))
+    }
+
+    func testOppositeVectorsAreParallel()
+    {
+        let a = Vector3( x:1.0, y:2.0, z:3.0 )
+        let b = -a
+
+        XCTAssertTrue(areParallel(a, b))
     }
 }
