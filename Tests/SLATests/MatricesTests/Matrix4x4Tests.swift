@@ -190,6 +190,28 @@ final class Matrix4x4Tests: XCTestCase
         XCTAssertEqual(myResult, dxResult)
     }
 
+    // Looking at the eye position is undefined, so it should just return an Identity matrix
+    func testLookAtEyeLH()
+    {
+        let eye = Vector3(x:1, y:2, z:3)
+        let up  = Vector3(x:0, y:1, z:0)
+
+        let M = Matrix4x4.lookAtLH(eye: eye, target: eye, upAxis: up)
+
+        XCTAssertEqual(M, Matrix4x4.identity())
+    }
+
+    // Looking at the eye position is undefined, so it should just return an Identity matrix
+    func testLookAtEyeRH()
+    {
+        let eye = Vector3(x:1, y:2, z:3)
+        let up  = Vector3(x:0, y:1, z:0)
+
+        let M = Matrix4x4.lookAtRH(eye: eye, target: eye, upAxis: up)
+
+        XCTAssertEqual(M, Matrix4x4.identity())
+    }
+
     func testPerspectiveRH()
     {
         let FOV_Y       = deg2rad(45)

@@ -64,6 +64,8 @@ public struct Matrix4x4 : SquareMatrix
 
     public static func lookAtRH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Self
     {
+        if eye == target { return Matrix4x4.identity() }
+
         let zAxis = Vector4( xyz: (target - eye).normalized(), w: 0.0)
         let xAxis = Vector4( xyz: zAxis.xyz().cross(upAxis), w: 0.0).normalized()
         let yAxis = Vector4( xyz: xAxis.xyz().cross(zAxis.xyz()), w: 0.0)
@@ -84,6 +86,8 @@ public struct Matrix4x4 : SquareMatrix
 
     public static func lookAtLH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Self
     {
+        if eye == target { return Matrix4x4.identity() }
+
         let zAxis = Vector4( xyz: (target - eye).normalized(), w: 0.0)
         let xAxis = Vector4( xyz: upAxis.cross(zAxis.xyz()), w: 0.0).normalized()
         let yAxis = Vector4( xyz: zAxis.xyz().cross(xAxis.xyz()), w: 0.0)
