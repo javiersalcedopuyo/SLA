@@ -1,7 +1,7 @@
 public typealias Vector3 = SIMD3<Float>
 
 // MARK: Utils
-func areParallel(_ a: Vector3, _ b: Vector3) -> Bool
+public func areParallel(_ a: Vector3, _ b: Vector3) -> Bool
 {
     // FIXME: This is just a quick hack to work around the floating point precision issues
     return abs(abs(a.dot(b)) - (a.norm() * b.norm())) <= 0.000002
