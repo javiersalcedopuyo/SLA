@@ -78,6 +78,14 @@ final class Vector3Tests: XCTestCase
         XCTAssertEqual( x.cross(y), z )
     }
 
+    func testCrossProductOfOrthogonalUnitVectorsIsUnitVectorToo()
+    {
+        let a = Vector3( x:1.0, y:0.0, z:0.0 )
+        let b = Vector3( x:0.0, y:1.0, z:0.0 )
+
+        XCTAssert( a.cross(b).isNormalized() )
+    }
+
     func testInverseCrossProduct()
     {
         let x = Vector3( x:1.0, y:0.0, z:0.0 )
