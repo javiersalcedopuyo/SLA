@@ -64,10 +64,18 @@ public struct Matrix4x4 : SquareMatrix
 
     public static func lookAtRH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Self
     {
-        if eye == target { return Matrix4x4.identity() }
+        // If the UP axis is normalized we can skip normalizing the result of the cross product
+        assert(upAxis.isNormalized())
+
+        var lookAt = Matrix4x4.identity()
+
+        if eye == target { return lookAt }
 
         let zAxis = Vector4( xyz: (target - eye).normalized(), w: 0.0)
-        let xAxis = Vector4( xyz: zAxis.xyz().cross(upAxis), w: 0.0).normalized()
+
+        assert(!areParallel(zAxis.xyz(), upAxis), "Aligned Z and Y produce invalid X.")
+
+        let xAxis = Vector4( xyz: zAxis.xyz().cross(upAxis), w: 0.0)
         let yAxis = Vector4( xyz: xAxis.xyz().cross(zAxis.xyz()), w: 0.0)
 
         // Pre-multiply the translation
@@ -78,7 +86,7 @@ public struct Matrix4x4 : SquareMatrix
 
         let orientation = Matrix4x4(a: xAxis, b: yAxis, c: zAxis, d: Vector4.zero)
 
-        var lookAt = orientation.transposed()
+        lookAt = orientation.transposed()
         lookAt.setColumn(idx: 3, val: translation)
 
         return lookAt
@@ -86,10 +94,16 @@ public struct Matrix4x4 : SquareMatrix
 
     public static func lookAtLH(eye: Vector3, target: Vector3, upAxis: Vector3) -> Self
     {
+        // If the UP axis is normalized we can skip normalizing the result of the cross product
+        assert(upAxis.isNormalized())
+
         if eye == target { return Matrix4x4.identity() }
 
         let zAxis = Vector4( xyz: (target - eye).normalized(), w: 0.0)
-        let xAxis = Vector4( xyz: upAxis.cross(zAxis.xyz()), w: 0.0).normalized()
+
+        assert(!areParallel(zAxis.xyz(), upAxis), "Aligned Z and Y produce invalid X.")
+
+        let xAxis = Vector4( xyz: upAxis.cross(zAxis.xyz()), w: 0.0)
         let yAxis = Vector4( xyz: zAxis.xyz().cross(xAxis.xyz()), w: 0.0)
 
         // Pre-multiply the translation
