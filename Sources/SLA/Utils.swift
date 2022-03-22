@@ -1,3 +1,10 @@
+let FLOAT_EPSILON: Float = 0.000002
+
+func areAlmostEqual(_ a: Float, _ b: Float) -> Bool
+{
+    return abs(a - b) <= FLOAT_EPSILON
+}
+
 // Linear interpolation between Vectors of Floats
 func lerp<T: SIMD>(from: T, to: T, t: Float) -> T
     where T.Scalar == Float
