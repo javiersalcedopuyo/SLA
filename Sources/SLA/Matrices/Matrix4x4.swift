@@ -1,4 +1,5 @@
 import Foundation
+import SimpleLogs
 
 public struct Matrix4x4 : SquareMatrix
 {
@@ -210,4 +211,12 @@ public struct Matrix4x4 : SquareMatrix
     // TODO public static func perspectiveInfiniteReversedLH() -> Self
     // TODO public static func orthographicRH() -> Self
     // TODO public static func orthographicLH() -> Self
+
+    // TODO: public func get3x3() -> Matrix3x3
+
+    public func determinant() -> Float
+    {
+        SimpleLogs.UNIMPLEMENTED("")
+        return 0.0
+    }
 }

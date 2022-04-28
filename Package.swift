@@ -13,12 +13,18 @@ let package = Package(
             targets: ["SLA"]),
     ],
 
-    dependencies: [],
+    dependencies: [
+        .package(
+            name: "SimpleLogs",
+            url: "https://github.com/javiersalcedopuyo/SimpleLogsSwift",
+            .branch("main")
+        )
+    ],
 
     targets: [
         .target(
             name: "SLA",
-            dependencies: []),
+            dependencies: ["SimpleLogs"]),
         .testTarget(
             name: "SLATests",
             dependencies: ["SLA"]),

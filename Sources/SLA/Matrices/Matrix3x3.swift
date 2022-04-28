@@ -54,4 +54,13 @@ public struct Matrix3x3 : SquareMatrix
     }
 
     // TODO: static func *(right: Self, left: Matrix3x4) -> Matrix3x4
+
+    public func determinant() -> Float
+    {
+        let a = self.getColumn(0)
+        let b = self.getColumn(1)
+        let c = self.getColumn(2)
+
+        return (a.cross(b)).dot(c)
+    }
 }

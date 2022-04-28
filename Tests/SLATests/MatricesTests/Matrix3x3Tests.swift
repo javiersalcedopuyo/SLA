@@ -206,4 +206,58 @@ final class Matrix3x3Tests: XCTestCase
             XCTAssertEqual(M.get(col:i, row:i), 0.5)
         }
     }
+
+    // MARK: Determinant properties
+    func testDeterminantOfIdentity()
+    {
+        let I = Matrix3x3.identity()
+
+        XCTAssertEqual(I.determinant(), 1.0)
+    }
+
+    func testDeterminantOfTranspose()
+    {
+        let M = Matrix3x3(a: Vector3(x:0, y:1, z:2),
+                          b: Vector3(x:3, y:4, z:5),
+                          c: Vector3(x:6, y:7, z:8))
+
+        let Mt = M.transposed()
+
+        XCTAssertEqual(M.determinant(), Mt.determinant())
+    }
+
+    // TODO: Implement the inverse
+    // func testDeterminantOfInverse()
+    // {
+    //     let M = Matrix3x3(a: Vector3(x:0, y:1, z:2),
+    //                       b: Vector3(x:3, y:4, z:5),
+    //                       c: Vector3(x:6, y:7, z:8))
+
+    //     let Mi = M.inverse()
+
+    //     XCTAssertEqual(Mi.determinant(), 1.0 / M.determinant())
+    // }
+
+    func testDeterminantProduct()
+    {
+        let A = Matrix3x3(a: Vector3(x:0, y:1, z:2),
+                          b: Vector3(x:3, y:4, z:5),
+                          c: Vector3(x:6, y:7, z:8))
+
+        let B = Matrix3x3(a: Vector3(x:1, y:2, z:3),
+                          b: Vector3(x:4, y:5, z:6),
+                          c: Vector3(x:7, y:8, z:9))
+
+        let AB = A * B
+
+        XCTAssertEqual(AB.determinant(), A.determinant() * B.determinant())
+    }
+
+    func testDeterminantByScalar()
+    {
+        let t = Float(42)
+        let M = Matrix3x3.identity()
+
+        XCTAssertEqual((M*t).determinant(), pow(t, Float(M.dimension)) * M.determinant())
+    }
 }

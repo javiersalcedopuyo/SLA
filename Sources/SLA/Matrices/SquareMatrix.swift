@@ -15,7 +15,7 @@ public protocol SquareMatrix : Equatable
 
     // TODO: static func /(left: Self, right: Self) -> Self?
     // TODO: func inv() -> Self
-    // TODO: func det() -> Float
+    func determinant() -> Float
 
     // TODO: Transforms
 }
