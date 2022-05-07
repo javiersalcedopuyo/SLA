@@ -212,7 +212,12 @@ public struct Matrix4x4 : SquareMatrix
     // TODO public static func orthographicRH() -> Self
     // TODO public static func orthographicLH() -> Self
 
-    // TODO: public func get3x3() -> Matrix3x3
+    public func get3x3() -> Matrix3x3
+    {
+        return Matrix3x3(a: self.getColumn(0).xyz(),
+                         b: self.getColumn(1).xyz(),
+                         c: self.getColumn(2).xyz())
+    }
 
     public func inverse() -> Matrix4x4?
     {
