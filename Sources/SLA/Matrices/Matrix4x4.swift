@@ -214,6 +214,12 @@ public struct Matrix4x4 : SquareMatrix
 
     // TODO: public func get3x3() -> Matrix3x3
 
+    public func inverse() -> Matrix4x4?
+    {
+        SimpleLogs.UNIMPLEMENTED("")
+        return nil
+    }
+
     public func determinant() -> Float
     {
         SimpleLogs.UNIMPLEMENTED("")

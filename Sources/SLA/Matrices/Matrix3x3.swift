@@ -55,6 +55,30 @@ public struct Matrix3x3 : SquareMatrix
 
     // TODO: static func *(right: Self, left: Matrix3x4) -> Matrix3x4
 
+    public func inverse() -> Matrix3x3?
+    {
+        let determinant = self.determinant()
+
+        if determinant == 0.0
+        {
+            return nil
+        }
+
+        let col0 = self.getColumn(0)
+        let col1 = self.getColumn(1)
+        let col2 = self.getColumn(2)
+
+        let invDet = 1.0 / determinant
+
+        let row0 = col1.cross(col2) * invDet
+        let row1 = col2.cross(col0) * invDet
+        let row2 = col0.cross(col1) * invDet
+
+        return Matrix3x3(a: Vector3(x: row0.x(), y: row1.x(), z: row2.x()),
+                         b: Vector3(x: row0.y(), y: row1.y(), z: row2.y()),
+                         c: Vector3(x: row0.z(), y: row1.z(), z: row2.z()))
+    }
+
     public func determinant() -> Float
     {
         let a = self.getColumn(0)

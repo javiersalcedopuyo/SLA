@@ -14,7 +14,7 @@ public protocol SquareMatrix : Equatable
     static func makeRotation(radians: Float, axis: ColumnType) -> Self
 
     // TODO: static func /(left: Self, right: Self) -> Self?
-    // TODO: func inv() -> Self
+    func inverse() -> Self?
     func determinant() -> Float
 
     // TODO: Transforms
