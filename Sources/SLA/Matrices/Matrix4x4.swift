@@ -14,6 +14,16 @@ public struct Matrix4x4 : SquareMatrix
         self.contents  = [a, b, c, d]
     }
 
+    public init(from3x3 mat3x3: Matrix3x3)
+    {
+        let a = Vector4(mat3x3.getColumn(0), 0)
+        let b = Vector4(mat3x3.getColumn(1), 0)
+        let c = Vector4(mat3x3.getColumn(2), 0)
+        let d = Vector4(x: 0, y: 0, z: 0, w: 1)
+
+        self.contents  = [a, b, c, d]
+    }
+
     public static func zero() -> Self
     {
         return Matrix4x4(a: Vector4.zero,
@@ -212,7 +222,18 @@ public struct Matrix4x4 : SquareMatrix
     // TODO public static func orthographicRH() -> Self
     // TODO public static func orthographicLH() -> Self
 
-    // TODO: public func get3x3() -> Matrix3x3
+    public func get3x3() -> Matrix3x3
+    {
+        return Matrix3x3(a: self.getColumn(0).xyz(),
+                         b: self.getColumn(1).xyz(),
+                         c: self.getColumn(2).xyz())
+    }
+
+    public func inverse() -> Matrix4x4?
+    {
+        SimpleLogs.UNIMPLEMENTED("")
+        return nil
+    }
 
     public func determinant() -> Float
     {

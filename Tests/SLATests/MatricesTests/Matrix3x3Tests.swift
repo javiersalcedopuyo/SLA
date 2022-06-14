@@ -224,6 +224,20 @@ final class Matrix3x3Tests: XCTestCase
         }
     }
 
+    func testMultiplicationByInverse()
+    {
+        let M = Matrix3x3.makeRotation(radians: 12.34,
+                                       axis: Vector3(x:1, y: 0, z:0))
+
+        guard let iM = M.inverse() else
+        {
+            XCTFail()
+            return
+        }
+
+        XCTAssertEqual(M * iM, Matrix3x3.identity())
+    }
+
     // MARK: Determinant properties
     func testDeterminantOfIdentity()
     {
