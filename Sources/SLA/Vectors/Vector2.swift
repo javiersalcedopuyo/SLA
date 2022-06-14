@@ -10,6 +10,8 @@ public extension Vector2
     func x() -> Float { self.x }
     func y() -> Float { self.y }
 
+    func asPackedArray() -> [Float] { [self.x(), self.y()] }
+
     // MARK: - Operators
     func dot(_ right: Self) -> Float { self.x * right.x + self.y * right.y }
 

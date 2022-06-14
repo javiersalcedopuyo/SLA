@@ -141,4 +141,22 @@ final class Vector3Tests: XCTestCase
 
         XCTAssertTrue(areParallel(a, b))
     }
+
+    func testGetAsPackedArray()
+    {
+        let a :[Float] = [0.0,  1.0,  2.0]
+        let v = Vector3(x:0, y:1, z:2)
+
+        XCTAssertEqual(v.asPackedArray(), a)
+    }
+
+    func testSizeInBytesIncludesPadding()
+    {
+        let vector3Size = MemoryLayout<Vector3>.size
+        let paddedSize  = MemoryLayout<Float>.size * 4
+        let packedSize  = MemoryLayout<Float>.size * 3
+
+        XCTAssertNotEqual(vector3Size, packedSize)
+        XCTAssertEqual(vector3Size, paddedSize)
+    }
 }

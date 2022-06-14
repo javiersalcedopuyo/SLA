@@ -74,4 +74,17 @@ final class Vector4Tests: XCTestCase
     {
         XCTAssertEqual(Vector4.zero().normalized(), Vector4.zero())
     }
+
+    func testGetAsPackedArray()
+    {
+        let a :[Float] = [0.0,  1.0,  2.0, 3.0]
+        let v = Vector4(x:0, y:1, z:2, w:3)
+
+        XCTAssertEqual(v.asPackedArray(), a)
+    }
+
+    func testSizeInBytes()
+    {
+        XCTAssertEqual(MemoryLayout<Vector3>.size, MemoryLayout<Float>.size * 4)
+    }
 }

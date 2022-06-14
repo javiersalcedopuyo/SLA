@@ -23,6 +23,8 @@ public extension Vector4
     func rgb() -> Vector3 { return Vector3(self.x, self.y, self.z) }
     // TODO: More combinations
 
+    func asPackedArray() -> [Float] { [self.x(), self.y(), self.z(), self.w()] }
+
     // MARK: - Operators
     func dot (_ right: Self) -> Float
     {

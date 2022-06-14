@@ -35,7 +35,7 @@ final class Matrix3x3Tests: XCTestCase
         XCTAssertEqual( I.getColumn(2), Vector3(x:0, y:0, z:1) )
     }
 
-    func testGetAsSingleArray()
+    func testGetAsPackedArray()
     {
         let line :[Float] = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
 
@@ -45,8 +45,25 @@ final class Matrix3x3Tests: XCTestCase
 
         let M = Matrix3x3(a:a, b:b, c:c)
 
-        XCTAssertEqual(M.asSingleArray(), line)
+        XCTAssertEqual(M.asPackedArray(), line)
     }
+
+    // FIXME:
+//    func testSize()
+//    {
+//        let I = Matrix3x3.identity()
+//        XCTAssertEqual(MemoryLayout<Matrix3x3>.size, I.size)
+//    }
+//
+//    func testSizeInBytesIncludesPadding()
+//    {
+//        let matrixSize = MemoryLayout<Matrix3x3>.size
+//        let paddedSize = MemoryLayout<Float>.size * 4 * 3
+//        let packedSize = MemoryLayout<Float>.size * 3 * 3
+//
+//        XCTAssertNotEqual(matrixSize, packedSize)
+//        XCTAssertEqual(matrixSize, paddedSize)
+//    }
 
     func testMultiplicationByIdentity()
     {

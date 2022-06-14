@@ -28,6 +28,8 @@ public extension Vector3
     func rg() -> Vector2 { Vector2(self.x, self.y) }
     func gb() -> Vector2 { Vector2(self.y, self.z) }
 
+    func asPackedArray() -> [Float] { [self.x(), self.y(), self.z()] }
+
     // MARK: - Operators
     func dot (_ right: Self) -> Float
     {

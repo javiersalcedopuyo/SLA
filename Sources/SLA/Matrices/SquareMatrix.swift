@@ -36,7 +36,7 @@ public extension SquareMatrix
         return self.contents[idx]
     }
 
-    func asSingleArray() -> [ElementType]
+    func asPackedArray() -> [ElementType]
     {
         var result: [ElementType] = []
         for x in 0..<self.dimension
