@@ -4,14 +4,15 @@ public protocol SquareMatrix : Equatable
     associatedtype ColumnType: SIMD where ColumnType.Scalar: FloatingPoint
     typealias ElementType = Self.ColumnType.Scalar
 
-    var size:      Int     { get }
-    var dimension: Int     { get }
     var contents:  [ColumnType] { get set }
 
     static func zero()     -> Self
     static func identity() -> Self
 
     static func makeRotation(radians: Float, axis: ColumnType) -> Self
+
+    static func size() -> Int
+    static func dimension() -> Int
 
     // TODO: static func /(left: Self, right: Self) -> Self?
     func inverse() -> Self?
@@ -25,8 +26,8 @@ public extension SquareMatrix
     // MARK: - Getters and Setters
     func get(col: Int, row: Int) -> ElementType
     {
-        assert(col < self.dimension, "ERROR: Column \(col) is out of bounds")
-        assert(row < self.dimension, "ERROR: Row \(row) is out of bounds")
+        assert(col < Self.dimension(), "ERROR: Column \(col) is out of bounds")
+        assert(row < Self.dimension(), "ERROR: Row \(row) is out of bounds")
         return self.contents[col][row]
     }
 
@@ -39,9 +40,9 @@ public extension SquareMatrix
     func asPackedArray() -> [ElementType]
     {
         var result: [ElementType] = []
-        for x in 0..<self.dimension
+        for x in 0..<Self.dimension()
         {
-            for y in 0..<self.dimension
+            for y in 0..<Self.dimension()
             {
                 result.append( self.get(col: x, row: y) )
             }
@@ -51,8 +52,8 @@ public extension SquareMatrix
 
     mutating func set(col: Int, row: Int, val: ElementType)
     {
-        assert(col < self.dimension, "ERROR: Column \(col) is out of bounds")
-        assert(row < self.dimension, "ERROR: Row \(row) is out of bounds")
+        assert(col < Self.dimension(), "ERROR: Column \(col) is out of bounds")
+        assert(row < Self.dimension(), "ERROR: Row \(row) is out of bounds")
 
         self.contents[col][row] = val
     }
@@ -62,10 +63,8 @@ public extension SquareMatrix
     // MARK: - Operators
     static func +(left: Self, right: Self) -> Self
     {
-        assert(left.dimension == right.dimension)
-
         var result = Self.zero()
-        for i in 0..<left.dimension
+        for i in 0..<Self.dimension()
         {
             result.contents[i] = left.contents[i] + right.contents[i];
         }
@@ -74,10 +73,9 @@ public extension SquareMatrix
 
     static func -(left: Self, right: Self) -> Self
     {
-        assert(left.dimension == right.dimension)
 
         var result = Self.zero()
-        for i in 0..<left.dimension
+        for i in 0..<Self.dimension()
         {
             result.contents[i] = left.contents[i] - right.contents[i];
         }
@@ -86,9 +84,8 @@ public extension SquareMatrix
 
     static func *(left: Self, right: Self) -> Self
     {
-        assert(left.dimension == right.dimension)
 
-        let n = right.dimension
+        let n = Self.dimension()
 
         var result = right
         for i in 0..<n {
@@ -107,9 +104,8 @@ public extension SquareMatrix
 
     static func *(left: Self, right: ColumnType) -> ColumnType
     {
-        assert(left.dimension == right.indices.count)
 
-        let n = left.dimension
+        let n = Self.dimension()
 
         var result = ColumnType.zero
         for i in 0..<n {
@@ -149,9 +145,7 @@ public extension SquareMatrix
 
     static func ==(left: Self, right: Self) -> Bool
     {
-        if left.dimension != right.dimension { return false }
-
-        for i in 0..<left.dimension
+        for i in 0..<Self.dimension()
         {
             if left.contents[i] != right.contents[i] { return false }
         }
@@ -162,6 +156,8 @@ public extension SquareMatrix
     func transposed() -> Self
     {
         var transposed = Self.zero()
+
+        let dimension = Self.dimension()
 
         for x in 0..<dimension {
             for y in 0..<dimension

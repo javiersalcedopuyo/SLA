@@ -3,8 +3,8 @@ import SimpleLogs
 
 public struct Matrix4x4 : SquareMatrix
 {
-    public let dimension = 4
-    public let size      = 4 * MemoryLayout<Vector4>.size
+    @inline(__always) public static func dimension() -> Int { 4 }
+    @inline(__always) public static func size() -> Int { 4 * MemoryLayout<Vector4>.size }
 
     // NOTE: Column major
     public var contents: [Vector4]

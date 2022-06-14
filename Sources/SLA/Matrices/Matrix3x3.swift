@@ -2,8 +2,8 @@ import Foundation
 
 public struct Matrix3x3 : SquareMatrix
 {
-    public let dimension = 3
-    public let size      = 3 * MemoryLayout<Vector3>.size
+    @inline(__always) public static func dimension() -> Int { 3 }
+    @inline(__always) public static func size() -> Int { Self.dimension() * MemoryLayout<Vector3>.size }
 
     // NOTE: Column major
     public var contents: [Vector3]

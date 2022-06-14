@@ -124,17 +124,15 @@ final class Matrix4x4Tests: XCTestCase
         XCTAssertEqual(M.asPackedArray(), line)
     }
 
-    // FIXME:
-//    func testSize()
-//    {
-//        let I = Matrix4x4.identity()
-//        let expectedRealSize = MemoryLayout<Float>.size * 4 * 4
-//
-//        // MemoryLayout won't match because the contents array is just a pointer of size 8
-//        XCTAssertNotEqual(MemoryLayout<Matrix4x4>.size, I.size)
-//        XCTAssertEqual(MemoryLayout<Matrix4x4>.size, MemoryLayout<Int>.size)
-//        XCTAssertEqual(I.size, expectedRealSize)
-//    }
+    func testSize()
+    {
+        // MemoryLayout won't match because the contents array is just a pointer of size 8
+        XCTAssertNotEqual(MemoryLayout<Matrix4x4>.size, Matrix4x4.size())
+        XCTAssertEqual(MemoryLayout<Matrix4x4>.size, MemoryLayout<Int>.size)
+
+        let expectedRealSize = MemoryLayout<Float>.size * 4 * 4
+        XCTAssertEqual(Matrix4x4.size(), expectedRealSize)
+    }
 
     func testMultiplicationByIdentity()
     {

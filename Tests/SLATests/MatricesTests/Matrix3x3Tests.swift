@@ -49,21 +49,22 @@ final class Matrix3x3Tests: XCTestCase
     }
 
     // FIXME:
-//    func testSize()
-//    {
-//        let I = Matrix3x3.identity()
-//        XCTAssertEqual(MemoryLayout<Matrix3x3>.size, I.size)
-//    }
-//
-//    func testSizeInBytesIncludesPadding()
-//    {
-//        let matrixSize = MemoryLayout<Matrix3x3>.size
-//        let paddedSize = MemoryLayout<Float>.size * 4 * 3
-//        let packedSize = MemoryLayout<Float>.size * 3 * 3
-//
-//        XCTAssertNotEqual(matrixSize, packedSize)
-//        XCTAssertEqual(matrixSize, paddedSize)
-//    }
+    func testSize()
+    {
+        // The actual size of the matrix is 8, because the contents are just a pointer
+        XCTAssertNotEqual(MemoryLayout<Matrix3x3>.size, Matrix3x3.size())
+        XCTAssertEqual(MemoryLayout<Matrix3x3>.size, MemoryLayout<Int>.size)
+    }
+
+    func testSizeInBytesIncludesPadding()
+    {
+        let matrixSize = Matrix3x3.size()
+        let paddedSize = MemoryLayout<Float>.size * 4 * 3
+        let packedSize = MemoryLayout<Float>.size * 3 * 3
+
+        XCTAssertNotEqual(matrixSize, packedSize)
+        XCTAssertEqual(matrixSize, paddedSize)
+    }
 
     func testMultiplicationByIdentity()
     {
@@ -154,8 +155,10 @@ final class Matrix3x3Tests: XCTestCase
 
         let Mt = M.transposed()
 
-        for x in 0..<M.dimension {
-            for y in 0..<M.dimension
+        let dimension = Matrix3x3.dimension()
+
+        for x in 0..<dimension {
+            for y in 0..<dimension
             {
                 XCTAssertEqual(M.get(col: x, row: y), Mt.get(col:y, row:x))
             }
@@ -185,7 +188,7 @@ final class Matrix3x3Tests: XCTestCase
         var M = Matrix3x3.identity()
         M *= scalar
 
-        for i in 0..<M.dimension
+        for i in 0..<Matrix3x3.dimension()
         {
             XCTAssertEqual(M.get(col: i, row: i), scalar)
         }
@@ -196,7 +199,7 @@ final class Matrix3x3Tests: XCTestCase
         let scalar: Float = 10.0
         let M = Matrix3x3.identity() * scalar
 
-        for i in 0..<M.dimension
+        for i in 0..<Matrix3x3.dimension()
         {
             XCTAssertEqual(M.get(col: i, row: i), scalar)
         }
@@ -207,7 +210,7 @@ final class Matrix3x3Tests: XCTestCase
         var M = Matrix3x3.identity()
         M /= 2.0
 
-        for i in 0..<M.dimension
+        for i in 0..<Matrix3x3.dimension()
         {
             XCTAssertEqual(M.get(col:i, row:i), 0.5)
         }
@@ -218,7 +221,7 @@ final class Matrix3x3Tests: XCTestCase
         let I = Matrix3x3.identity()
         let M = I / 2.0
 
-        for i in 0..<M.dimension
+        for i in 0..<Matrix3x3.dimension()
         {
             XCTAssertEqual(M.get(col:i, row:i), 0.5)
         }
@@ -289,6 +292,7 @@ final class Matrix3x3Tests: XCTestCase
         let t = Float(42)
         let M = Matrix3x3.identity()
 
-        XCTAssertEqual((M*t).determinant(), pow(t, Float(M.dimension)) * M.determinant())
+        XCTAssertEqual((M*t).determinant(),
+                       pow(t, Float(Matrix3x3.dimension())) * M.determinant())
     }
 }
