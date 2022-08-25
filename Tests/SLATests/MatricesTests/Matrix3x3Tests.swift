@@ -79,6 +79,21 @@ final class Matrix3x3Tests: XCTestCase
         XCTAssertEqual(M*I, M)
     }
 
+    func testMultiplicationOfIdentityByVector()
+    {
+        let V = Vector3(x:0, y:1, z:2)
+        let I = Matrix3x3.identity()
+
+        let resultColA = Vector3(x: 0, y:0, z:0)
+        let resultColB = Vector3(x: 0, y:1, z:0)
+        let resultColC = Vector3(x: 0, y:0, z:2)
+        let expectedResult = Matrix3x3(a: resultColA,
+                                       b:resultColB,
+                                       c:resultColC)
+
+        XCTAssertEqual(V*I, expectedResult)
+    }
+
     func testMultiplicationOfVectorByIdentity()
     {
         let V = Vector3(x:0, y:1, z:2)

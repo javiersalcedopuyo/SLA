@@ -117,6 +117,22 @@ public extension SquareMatrix
         return result
     }
 
+    static func *(left: ColumnType, right: Self) -> Self
+    {
+        let n = Self.dimension()
+
+        var result = right
+        for i in 0..<n
+        {
+            for j in 0..<n
+            {
+                result.set(col:j, row:i,
+                           val: result.get(col:j, row:i) * left[i])
+            }
+        }
+        return result
+    }
+
     static func /=(left: inout Self, right: ColumnType.Scalar)
     {
         left = left / right
