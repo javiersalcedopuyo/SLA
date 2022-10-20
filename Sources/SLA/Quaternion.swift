@@ -19,6 +19,12 @@ public struct Quaternion : Equatable
                     w: resultData.w)
     }
 
+    static func +(left: Self, right: Vector3) -> Self
+    {
+        return Self(vector: left.getVectorPart() + right,
+                    scalar: left.getScalarPart())
+    }
+
     static func -(left: Self, right: Self) -> Self
     {
         let resultData = left.data - right.data
@@ -26,6 +32,12 @@ public struct Quaternion : Equatable
                     y: resultData.y,
                     z: resultData.z,
                     w: resultData.w)
+    }
+
+    static func -(left: Self, right: Vector3) -> Self
+    {
+        return Self(vector: left.getVectorPart() - right,
+                    scalar: left.getScalarPart())
     }
 
     static func *(left: Self, right: Self) -> Self
@@ -45,8 +57,34 @@ public struct Quaternion : Equatable
         return Self(vector: productVector, scalar: productScalar)
     }
 
+    static func *(left: Self, right: Float) -> Self
+    {
+        let resultData = left.data * right
+        return Self(x: resultData.x,
+                    y: resultData.y,
+                    z: resultData.z,
+                    w: resultData.w)
+    }
+
+    static func *(left: Float, right: Self) -> Self
+    {
+        let resultData = right.data * left
+        return Self(x: resultData.x,
+                    y: resultData.y,
+                    z: resultData.z,
+                    w: resultData.w)
+    }
+
     public func getVectorPart() -> Vector3  { self.data.xyz() }
     public func getScalarPart() -> Float    { self.data.w }
+
+    public func conjugate() -> Self
+    {
+        let v = -self.getVectorPart()
+        let s = self.getScalarPart()
+
+        return Self(vector: v, scalar: s)
+    }
 
     private var data: Vector4
 }
