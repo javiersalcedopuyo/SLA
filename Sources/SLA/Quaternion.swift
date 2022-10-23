@@ -1,3 +1,5 @@
+import Foundation
+
 public struct Quaternion : Equatable
 {
     public init(x: Float, y: Float, z:Float, w: Float)
@@ -84,6 +86,11 @@ public struct Quaternion : Equatable
         let s = self.getScalarPart()
 
         return Self(vector: v, scalar: s)
+    }
+
+    public func magnitude() -> Float
+    {
+        sqrt( pow(data.x, 2) + pow(data.y, 2) + pow(data.z, 2) + pow(data.w, 2) )
     }
 
     private var data: Vector4

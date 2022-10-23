@@ -138,8 +138,41 @@ final class QuaternionTests: XCTestCase
                        q2.conjugate() * q1.conjugate())
     }
 
-    // TODO: testMagnitude
-    // TODO: testMagnitudeProduct
+    func testMagnitude()
+    {
+        let q = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        XCTAssertEqual(q.magnitude(), sqrt(14))
+    }
+
+    func testMagnitudeProduct()
+    {
+        let q1 = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        let q2 = Quaternion(x: 1, y: 2, z: 3, w: 4)
+
+        let m1 = q1.magnitude()
+        let m2 = q2.magnitude()
+
+        XCTAssertEqual((q1 * q2).magnitude(),
+                       m1 * m2)
+    }
+
+    func testMagnitudeProductByPositiveScalar()
+    {
+        let q = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        let s: Float = 42
+
+        XCTAssertEqual((q * s).magnitude(),
+                       s * q.magnitude())
+    }
+
+    func testMagnitudeProductByNegativeScalar()
+    {
+        let q = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        let s: Float = -42
+
+        XCTAssertEqual((q * s).magnitude(),
+                       abs(s) * q.magnitude())
+    }
     // TODO: testInverse
     // TODO: testProductOfInverses
 }
