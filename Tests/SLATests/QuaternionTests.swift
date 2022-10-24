@@ -129,6 +129,14 @@ final class QuaternionTests: XCTestCase
         XCTAssertEqual(q.getScalarPart(),  c.getScalarPart())
     }
 
+    func testProductByConjugateIsAScalar()
+    {
+        let q = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        let product = q * q.conjugate()
+
+        XCTAssertEqual(product.getVectorPart(), Vector3.zero())
+    }
+
     func testConjugateProduct()
     {
         let q1 = Quaternion(x: 0, y: 1, z: 2, w: 3)
@@ -173,6 +181,53 @@ final class QuaternionTests: XCTestCase
         XCTAssertEqual((q * s).magnitude(),
                        abs(s) * q.magnitude())
     }
-    // TODO: testInverse
-    // TODO: testProductOfInverses
+
+    func testIdentity()
+    {
+        let q = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        let I = Quaternion.identity()
+
+        XCTAssertEqual(I.magnitude(), 1)
+        XCTAssertEqual(q * I, q)
+    }
+
+    func testIdentityIsCommutable()
+    {
+        let q = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        let I = Quaternion.identity()
+
+        XCTAssertEqual(q * I, q * I)
+    }
+
+    func testInverse()
+    {
+        let q = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        let r = q * q.inverse()!
+
+        XCTAssertEqual(r.getVectorPart().x(), 0, accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(r.getVectorPart().y(), 0, accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(r.getVectorPart().z(), 0, accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(r.getScalarPart(),     1, accuracy: FLOAT_EPSILON)
+    }
+
+    func testMagnitude0HasNoInverse()
+    {
+        let q = Quaternion.zero()
+
+        XCTAssertNil(q.inverse())
+    }
+
+    func testProductOfInverses()
+    {
+        let q1 = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        let q2 = Quaternion(x: 1, y: 2, z: 3, w: 4)
+
+        let A = (q1 * q2).inverse()!
+        let B = q2.inverse()! * q1.inverse()!
+
+        XCTAssertEqual(A.getVectorPart().x(), B.getVectorPart().x(), accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(A.getVectorPart().y(), B.getVectorPart().y(), accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(A.getVectorPart().z(), B.getVectorPart().z(), accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(A.getScalarPart(),     B.getScalarPart()    , accuracy: FLOAT_EPSILON)
+    }
 }
