@@ -1,5 +1,10 @@
 import Foundation
 
+enum QuaternionErrors : Error
+{
+    case NoInverse
+}
+
 public struct Quaternion : Equatable
 {
     public init(x: Float, y: Float, z:Float, w: Float) { self.data = Vector4(x, y, z, w) }
@@ -8,6 +13,20 @@ public struct Quaternion : Equatable
 
     public static func zero()       -> Self { Self(vector: Vector3.zero(), scalar: 0) }
     public static func identity()   -> Self { Self(vector: Vector3.zero(), scalar: 1) }
+
+    public static func makeRotation(radians: Float, axis: Vector3) -> Self
+    {
+        let halfRadians = radians * 0.5
+        let v = sin(halfRadians) * axis
+        let s = cos(halfRadians)
+
+        return Self(vector: v, scalar: s)
+    }
+
+    static prefix func -(right: Self) -> Self
+    {
+        Self(vector: -right.getVectorPart(), scalar: -right.getScalarPart())
+    }
 
     static func +(left: Self, right: Self) -> Self
     {

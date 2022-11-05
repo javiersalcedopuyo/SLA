@@ -230,4 +230,45 @@ final class QuaternionTests: XCTestCase
         XCTAssertEqual(A.getVectorPart().z(), B.getVectorPart().z(), accuracy: FLOAT_EPSILON)
         XCTAssertEqual(A.getScalarPart(),     B.getScalarPart()    , accuracy: FLOAT_EPSILON)
     }
+
+    func testUnitQuaternionInverseIsItsConjugate()
+    {
+        var q = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        q = q / q.magnitude()
+
+        let inv = q.inverse()!
+        let con = q.conjugate()
+
+        XCTAssertEqual(inv.getVectorPart().x(), con.getVectorPart().x(), accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(inv.getVectorPart().y(), con.getVectorPart().y(), accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(inv.getVectorPart().z(), con.getVectorPart().z(), accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(inv.getScalarPart(),     con.getScalarPart()    , accuracy: FLOAT_EPSILON)
+    }
+
+    func testProductOfUnitQuaternionsIsAUnitQuaternion()
+    {
+        var q1 = Quaternion(x: 0, y: 1, z: 2, w: 3)
+        q1 = q1 / q1.magnitude()
+
+        var q2 = Quaternion(x: 1, y: 2, z: 3, w: 4)
+        q2 = q2 / q2.magnitude()
+
+        let q3 = q1 * q2
+
+        XCTAssertEqual(q3.magnitude(), 1, accuracy: FLOAT_EPSILON)
+    }
+
+    func testNegatedQuaternionRepresentsTheSameRotation()
+    {
+        let q = Quaternion.makeRotation(radians: deg2rad(42), axis: Vector3(x: 1, y: 0, z: 0))
+
+        let point = Vector3(x: 0, y: 1, z: 2)
+
+        let p1 = try! rotate(vector: point, quaternion: q)
+        let p2 = try! rotate(vector: point, quaternion: -q)
+
+        XCTAssertEqual(p1.x, p2.x, accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(p1.y, p2.y, accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(p1.z, p2.z, accuracy: FLOAT_EPSILON)
+    }
 }
