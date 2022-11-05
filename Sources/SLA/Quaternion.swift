@@ -7,6 +7,7 @@ enum QuaternionErrors : Error
 
 public struct Quaternion : Equatable
 {
+    // MARK: - Public
     public init(x: Float, y: Float, z:Float, w: Float) { self.data = Vector4(x, y, z, w) }
 
     public init(vector: Vector3, scalar: Float) { self.data = Vector4(xyz: vector, w: scalar) }
@@ -23,12 +24,12 @@ public struct Quaternion : Equatable
         return Self(vector: v, scalar: s)
     }
 
-    static prefix func -(right: Self) -> Self
+    public static prefix func -(right: Self) -> Self
     {
         Self(vector: -right.getVectorPart(), scalar: -right.getScalarPart())
     }
 
-    static func +(left: Self, right: Self) -> Self
+    public static func +(left: Self, right: Self) -> Self
     {
         let resultData = left.data + right.data
         return Self(x: resultData.x,
@@ -37,13 +38,13 @@ public struct Quaternion : Equatable
                     w: resultData.w)
     }
 
-    static func +(left: Self, right: Vector3) -> Self
+    public static func +(left: Self, right: Vector3) -> Self
     {
         return Self(vector: left.getVectorPart() + right,
                     scalar: left.getScalarPart())
     }
 
-    static func -(left: Self, right: Self) -> Self
+    public static func -(left: Self, right: Self) -> Self
     {
         let resultData = left.data - right.data
         return Self(x: resultData.x,
@@ -52,13 +53,13 @@ public struct Quaternion : Equatable
                     w: resultData.w)
     }
 
-    static func -(left: Self, right: Vector3) -> Self
+    public static func -(left: Self, right: Vector3) -> Self
     {
         return Self(vector: left.getVectorPart() - right,
                     scalar: left.getScalarPart())
     }
 
-    static func *(left: Self, right: Self) -> Self
+    public static func *(left: Self, right: Self) -> Self
     {
         let v1 = left.getVectorPart()
         let s1 = left.getScalarPart()
@@ -75,7 +76,7 @@ public struct Quaternion : Equatable
         return Self(vector: productVector, scalar: productScalar)
     }
 
-    static func *(left: Self, right: Float) -> Self
+    public static func *(left: Self, right: Float) -> Self
     {
         let resultData = left.data * right
         return Self(x: resultData.x,
@@ -84,7 +85,7 @@ public struct Quaternion : Equatable
                     w: resultData.w)
     }
 
-    static func *(left: Float, right: Self) -> Self
+    public static func *(left: Float, right: Self) -> Self
     {
         let resultData = right.data * left
         return Self(x: resultData.x,
@@ -93,7 +94,7 @@ public struct Quaternion : Equatable
                     w: resultData.w)
     }
 
-    static func /(left: Self, right: Float) -> Self
+    public static func /(left: Self, right: Float) -> Self
     {
         let resultData = left.data / right
         return Self(x: resultData.x,
@@ -134,5 +135,6 @@ public struct Quaternion : Equatable
         return self.conjugate() / m2
     }
 
+    // MARK: - Private
     private var data: Vector4
 }
