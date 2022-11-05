@@ -38,11 +38,15 @@ public struct Quaternion : Equatable
                     w: resultData.w)
     }
 
+    public static func +=(left: inout Self, right: Self) { left = left + right }
+
     public static func +(left: Self, right: Vector3) -> Self
     {
         return Self(vector: left.getVectorPart() + right,
                     scalar: left.getScalarPart())
     }
+
+    public static func +=(left: inout Self, right: Vector3) { left = left + right }
 
     public static func -(left: Self, right: Self) -> Self
     {
@@ -53,11 +57,15 @@ public struct Quaternion : Equatable
                     w: resultData.w)
     }
 
+    public static func -=(left: inout Self, right: Self) { left = left - right }
+
     public static func -(left: Self, right: Vector3) -> Self
     {
         return Self(vector: left.getVectorPart() - right,
                     scalar: left.getScalarPart())
     }
+
+    public static func -=(left: inout Self, right: Vector3) { left = left - right }
 
     public static func *(left: Self, right: Self) -> Self
     {
@@ -76,6 +84,8 @@ public struct Quaternion : Equatable
         return Self(vector: productVector, scalar: productScalar)
     }
 
+    public static func *=(left: inout Self, right: Self) { left = left * right }
+
     public static func *(left: Self, right: Float) -> Self
     {
         let resultData = left.data * right
@@ -84,6 +94,8 @@ public struct Quaternion : Equatable
                     z: resultData.z,
                     w: resultData.w)
     }
+
+    public static func *=(left: inout Self, right: Float) { left = left * right }
 
     public static func *(left: Float, right: Self) -> Self
     {
@@ -102,6 +114,8 @@ public struct Quaternion : Equatable
                     z: resultData.z,
                     w: resultData.w)
     }
+
+    public static func /=(left: inout Self, right: Float) { left = left / right }
 
     public func getVectorPart() -> Vector3  { self.data.xyz() }
     public func getScalarPart() -> Float    { self.data.w }
