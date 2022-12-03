@@ -220,10 +220,10 @@ public struct Matrix4x4 : SquareMatrix
     // TODO public static func perspectiveInfiniteReversedRH() -> Self
     // TODO public static func perspectiveInfiniteReversedLH() -> Self
 
-    static func orthographicRH(width:   Float,
-                               height:  Float,
-                               near:    Float,
-                               far:     Float)
+    public static func orthographicRH(width:   Float,
+                                      height:  Float,
+                                      near:    Float,
+                                      far:     Float)
     -> Self
     {
         let depth = near - far
@@ -238,10 +238,10 @@ public struct Matrix4x4 : SquareMatrix
         return mat
     }
 
-    static func orthographicLH(width:   Float,
-                               height:  Float,
-                               near:    Float,
-                               far:     Float)
+    public static func orthographicLH(width:   Float,
+                                      height:  Float,
+                                      near:    Float,
+                                      far:     Float)
     -> Self
     {
         let depth = far - near
