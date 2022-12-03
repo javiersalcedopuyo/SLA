@@ -84,6 +84,40 @@ func DXPerspectiveRH(fovy:        Float,
     return result
 }
 
+// As seen on https://learn.microsoft.com/en-gb/windows/win32/direct3d9/d3dxmatrixorthorh
+func DXOrthographicRH(width: Float,
+                      height: Float,
+                      near: Float,
+                      far: Float)
+-> Matrix4x4
+{
+    var result = Matrix4x4.zero()
+    result.set(col: 0, row: 0, val: 2.0 / width)
+    result.set(col: 1, row: 1, val: 2.0 / height)
+    result.set(col: 2, row: 2, val: 1.0 / (near - far))
+    result.set(col: 2, row: 3, val: near / (near - far))
+    result.set(col: 3, row: 3, val: 1.0)
+
+    return result
+}
+
+// As seen on https://learn.microsoft.com/en-gb/windows/win32/direct3d9/d3dxmatrixortholh
+func DXOrthographicLH(width: Float,
+                      height: Float,
+                      near: Float,
+                      far: Float)
+-> Matrix4x4
+{
+    var result = Matrix4x4.zero()
+    result.set(col: 0, row: 0, val: 2.0 / width)
+    result.set(col: 1, row: 1, val: 2.0 / height)
+    result.set(col: 2, row: 2, val: 1.0 / (far - near))
+    result.set(col: 2, row: 3, val: -near / (far - near))
+    result.set(col: 3, row: 3, val: 1.0)
+
+    return result
+}
+
 final class Matrix4x4Tests: XCTestCase
 {
     // NOTE: The following tests are exactly the same as for Matrix3x3, so won't be implemented
@@ -340,6 +374,60 @@ final class Matrix4x4Tests: XCTestCase
         let zProj2 = revProjectedPoint.z() / revProjectedPoint.w()
 
         XCTAssertEqual(zProj1, 1.0 - zProj2, accuracy: 0.0001)
+    }
+
+    func testOrthographicRH()
+    {
+        let WIDTH:  Float = 256
+        let HEIGHT: Float = 256
+        let NEAR:   Float = 0.1
+        let FAR:    Float = 1000.0
+
+        let point = Vector4(x:4, y:3, z:2, w:1)
+
+        let orth = Matrix4x4.orthographicRH(width: WIDTH,
+                                            height: HEIGHT,
+                                            near: NEAR,
+                                            far: FAR)
+
+        let dxOrth = DXOrthographicRH(width: WIDTH,
+                                      height: HEIGHT,
+                                      near: NEAR,
+                                      far: FAR)
+
+        let ref = dxOrth.transposed() * point
+        let mine = orth * point
+
+        XCTAssertEqual(mine.x, ref.x, accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(mine.y, ref.y, accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(mine.z, ref.z, accuracy: FLOAT_EPSILON)
+    }
+
+    func testOrthographicLH()
+    {
+        let WIDTH:  Float = 256
+        let HEIGHT: Float = 256
+        let NEAR:   Float = 0.1
+        let FAR:    Float = 1000.0
+
+        let point = Vector4(x:4, y:3, z:2, w:1)
+
+        let orth = Matrix4x4.orthographicLH(width: WIDTH,
+                                            height: HEIGHT,
+                                            near: NEAR,
+                                            far: FAR)
+
+        let dxOrth = DXOrthographicLH(width: WIDTH,
+                                      height: HEIGHT,
+                                      near: NEAR,
+                                      far: FAR)
+
+        let ref = dxOrth.transposed() * point
+        let mine = orth * point
+
+        XCTAssertEqual(mine.x, ref.x, accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(mine.y, ref.y, accuracy: FLOAT_EPSILON)
+        XCTAssertEqual(mine.z, ref.z, accuracy: FLOAT_EPSILON)
     }
 
     func testRotateOnY180()

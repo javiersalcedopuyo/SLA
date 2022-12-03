@@ -219,8 +219,42 @@ public struct Matrix4x4 : SquareMatrix
     // TODO public static func perspectiveInfiniteLH() -> Self
     // TODO public static func perspectiveInfiniteReversedRH() -> Self
     // TODO public static func perspectiveInfiniteReversedLH() -> Self
-    // TODO public static func orthographicRH() -> Self
-    // TODO public static func orthographicLH() -> Self
+
+    static func orthographicRH(width:   Float,
+                               height:  Float,
+                               near:    Float,
+                               far:     Float)
+    -> Self
+    {
+        let depth = near - far
+
+        var mat = Self.zero()
+        mat.set(col: 0, row: 0, val: 2.0 / width)
+        mat.set(col: 1, row: 1, val: 2.0 / height)
+        mat.set(col: 2, row: 2, val: 1.0 / depth)
+        mat.set(col: 3, row: 2, val: near / depth)
+        mat.set(col: 3, row: 3, val: 1)
+
+        return mat
+    }
+
+    static func orthographicLH(width:   Float,
+                               height:  Float,
+                               near:    Float,
+                               far:     Float)
+    -> Self
+    {
+        let depth = far - near
+
+        var mat = Self.zero()
+        mat.set(col: 0, row: 0, val: 2.0 / width)
+        mat.set(col: 1, row: 1, val: 2.0 / height)
+        mat.set(col: 2, row: 2, val: 1.0 / depth)
+        mat.set(col: 3, row: 2, val: -near / depth)
+        mat.set(col: 3, row: 3, val: 1)
+
+        return mat
+    }
 
     public func get3x3() -> Matrix3x3
     {
