@@ -271,4 +271,23 @@ final class QuaternionTests: XCTestCase
         XCTAssertEqual(p1.y, p2.y, accuracy: FLOAT_EPSILON)
         XCTAssertEqual(p1.z, p2.z, accuracy: FLOAT_EPSILON)
     }
+
+    func test180DegreesRotation()
+    {
+        let q = Quaternion.makeRotation(radians: PI, axis: Vector3(x: 0, y: 1, z: 0))
+        let v = Vector3(x: 1, y: 0, z: 0)
+
+        let v2 = try! rotate(vector: v, quaternion: q)
+        XCTAssertEqual(v2.x, -1, accuracy: FLOAT_EPSILON)
+    }
+
+    func testRotationAroundItself()
+    {
+        let p = Vector3(x: 0, y: 1, z: 2)
+        let q = Quaternion.makeRotation(radians: deg2rad(42), axis: p)
+
+        let r = try! rotate(vector: p, quaternion: q)
+
+        XCTAssertEqual(r, p)
+    }
 }
